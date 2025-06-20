@@ -126,6 +126,7 @@
           <th>الاسم</th>
           <th>البريد الإلكتروني</th>
           <th>رقم التليفون</th>
+          <th>الرسالة</th>
           <th>تاريخ الإرسال</th>
           <th>حذف</th>
         </tr>
@@ -244,6 +245,7 @@
             <td>${user.name}</td>
             <td>${user.email}</td>
             <td>${user.phone}</td>
+            <td>${user.message || 'لا توجد رسالة'}</td>
             <td>${new Date(user.receivedAt).toLocaleString('ar-EG')}</td>
             <td><button class="danger" data-email="${user.email}">حذف</button></td>
           `;
@@ -274,7 +276,7 @@
         });
 
       } catch (error) {
-        usersTableBody.innerHTML = '<tr><td colspan="5">تعذر تحميل بيانات المستخدمين</td></tr>';
+        usersTableBody.innerHTML = '<tr><td colspan="6">تعذر تحميل بيانات المستخدمين</td></tr>';
       }
     }
 
