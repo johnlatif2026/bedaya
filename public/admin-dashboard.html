@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>لوحة تحكم الادمن</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      direction: rtl;
+      background: #f0f0f0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1em;
+      margin: 5px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    button.danger {
+      background-color: #dc3545;
+    }
+
+    button.danger:hover {
+      background-color: #c82333;
+    }
+
+    button.success {
+      background-color: #28a745;
+    }
+
+    button.success:hover {
+      background-color: #218838;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 8px 12px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .section {
+      margin-top: 40px;
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+      resize: vertical;
+    }
+
+    input[type="email"],
+    input[type="text"],
+    input[type="tel"],
+    input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .response {
+      margin-top: 10px;
+      font-weight: bold;
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .upload-area {
+      border: 2px dashed #007bff;
+      padding: 20px;
+      text-align: center;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>لوحة تحكم الادمن</h1>
+
+  <button id="logoutBtn">تسجيل خروج</button>
+
+  <div class="section">
+    <h2>بيانات المستخدمين المرسلة</h2>
+    <table id="usersTable">
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>البريد الإلكتروني</th>
+          <th>رقم التليفون</th>
+          <th>تاريخ الإرسال</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- هنا تظهر بيانات المستخدمين -->
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>الحجوزات الواردة</h2>
+    <table id="bookingsTable">
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>رقم التليفون</th>
+          <th>التاريخ</th>
+          <th>الوقت</th>
+          <th>تاريخ الحجز</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- هنا تظهر الحجوزات -->
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>رفع نتائج جديدة</h2>
+    <form id="uploadResultForm">
+      <label for="resultPhone">رقم هاتف العميل:</label>
+      <input type="tel" id="resultPhone" required />
+      
+      <div class="upload-area">
+        <p>اسحب وأسقط ملف النتيجة هنا أو</p>
+        <input type="file" id="resultFile" required />
+      </div>
+      
+      <button type="submit" class="success">رفع النتيجة</button>
+    </form>
+    <p id="uploadResponse" class="response"></p>
+  </div>
+
+  <div class="section">
+    <h2>النتائج المرفوعة</h2>
+    <table id="resultsTable">
+      <thead>
+        <tr>
+          <th>رقم التليفون</th>
+          <th>النتيجة</th>
+          <th>تاريخ الرفع</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- هنا تظهر النتائج -->
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>إرسال رسالة إلى مستخدم</h2>
+    <form id="messageForm">
+      <label for="emailInput">البريد الإلكتروني للمستخدم:</label>
+      <input type="email" id="emailInput" placeholder="example@domain.com" required />
+      
+      <label for="messageInput">نص الرسالة:</label>
+      <textarea id="messageInput" placeholder="اكتب رسالتك هنا..." required></textarea>
+      
+      <button type="submit">إرسال رسالة</button>
+    </form>
+    <p id="sendResponse" class="response"></p>
+  </div>
+
+  <div class="section">
+    <h2>الرسائل المرسلة</h2>
+    <table id="sentMessagesTable">
+      <thead>
+        <tr>
+          <th>البريد الإلكتروني</th>
+          <th>الرسالة</th>
+          <th>تاريخ الإرسال</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- هنا تظهر الرسائل المرسلة -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const usersTableBody = document.querySelector("#usersTable tbody");
+    const bookingsTableBody = document.querySelector("#bookingsTable tbody");
+    const resultsTableBody = document.querySelector("#resultsTable tbody");
+    const sentMessagesTableBody = document.querySelector("#sentMessagesTable tbody");
+    const logoutBtn = document.getElementById('logoutBtn');
+    const messageForm = document.getElementById('messageForm');
+    const uploadResultForm = document.getElementById('uploadResultForm');
+    const sendResponse = document.getElementById('sendResponse');
+    const uploadResponse = document.getElementById('uploadResponse');
+
+    // تحميل بيانات المستخدمين وعرضها
+    async function loadUsers() {
+      try {
+        const res = await fetch('/api/admin/users');
+        if (!res.ok) throw new Error('خطأ في تحميل بيانات المستخدمين');
+        const users = await res.json();
+
+        usersTableBody.innerHTML = '';
+        users.forEach(user => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${user.phone}</td>
+            <td>${new Date(user.receivedAt).toLocaleString('ar-EG')}</td>
+            <td><button class="danger" data-email="${user.email}">حذف</button></td>
+          `;
+          usersTableBody.appendChild(tr);
+        });
+
+        // حذف مستخدم عند الضغط على زر الحذف
+        usersTableBody.querySelectorAll('button').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const emailToDelete = btn.getAttribute('data-email');
+            if (!confirm(`هل أنت متأكد من حذف المستخدم: ${emailToDelete} ؟`)) return;
+
+            try {
+              const res = await fetch(`/api/admin/user/${encodeURIComponent(emailToDelete)}`, {
+                method: 'DELETE'
+              });
+              const data = await res.json();
+              if (res.ok) {
+                alert(data.message);
+                loadUsers();
+              } else {
+                alert(data.error || 'حدث خطأ أثناء الحذف');
+              }
+            } catch {
+              alert('تعذر الاتصال بالخادم');
+            }
+          });
+        });
+
+      } catch (error) {
+        usersTableBody.innerHTML = '<tr><td colspan="5">تعذر تحميل بيانات المستخدمين</td></tr>';
+      }
+    }
+
+    // تحميل الحجوزات وعرضها
+    async function loadBookings() {
+      try {
+        const res = await fetch('/api/admin/bookings');
+        if (!res.ok) throw new Error('خطأ في تحميل الحجوزات');
+        const bookings = await res.json();
+
+        bookingsTableBody.innerHTML = '';
+        bookings.forEach(booking => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${booking.name}</td>
+            <td>${booking.phone}</td>
+            <td>${booking.date}</td>
+            <td>${booking.time}</td>
+            <td>${new Date(booking.receivedAt).toLocaleString('ar-EG')}</td>
+            <td><button class="danger" data-phone="${booking.phone}">حذف</button></td>
+          `;
+          bookingsTableBody.appendChild(tr);
+        });
+
+        // حذف حجز عند الضغط على زر الحذف
+        bookingsTableBody.querySelectorAll('button').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const phoneToDelete = btn.getAttribute('data-phone');
+            if (!confirm(`هل أنت متأكد من حذف الحجز لرقم: ${phoneToDelete} ؟`)) return;
+
+            try {
+              const res = await fetch(`/api/admin/booking/${encodeURIComponent(phoneToDelete)}`, {
+                method: 'DELETE'
+              });
+              const data = await res.json();
+              if (res.ok) {
+                alert(data.message);
+                loadBookings();
+              } else {
+                alert(data.error || 'حدث خطأ أثناء الحذف');
+              }
+            } catch {
+              alert('تعذر الاتصال بالخادم');
+            }
+          });
+        });
+
+      } catch (error) {
+        bookingsTableBody.innerHTML = '<tr><td colspan="6">تعذر تحميل الحجوزات</td></tr>';
+      }
+    }
+
+    // تحميل النتائج وعرضها
+    async function loadResults() {
+      try {
+        const res = await fetch('/api/admin/results');
+        if (!res.ok) throw new Error('خطأ في تحميل النتائج');
+        const results = await res.json();
+
+        resultsTableBody.innerHTML = '';
+        results.forEach(result => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${result.phone}</td>
+            <td><a href="${result.fileUrl}" target="_blank">عرض النتيجة</a></td>
+            <td>${new Date(result.uploadedAt).toLocaleString('ar-EG')}</td>
+            <td><button class="danger" data-phone="${result.phone}">حذف</button></td>
+          `;
+          resultsTableBody.appendChild(tr);
+        });
+
+        // حذف نتيجة عند الضغط على زر الحذف
+        resultsTableBody.querySelectorAll('button').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const phoneToDelete = btn.getAttribute('data-phone');
+            if (!confirm(`هل أنت متأكد من حذف النتيجة لرقم: ${phoneToDelete} ؟`)) return;
+
+            try {
+              const res = await fetch(`/api/admin/result/${encodeURIComponent(phoneToDelete)}`, {
+                method: 'DELETE'
+              });
+              const data = await res.json();
+              if (res.ok) {
+                alert(data.message);
+                loadResults();
+              } else {
+                alert(data.error || 'حدث خطأ أثناء الحذف');
+              }
+            } catch {
+              alert('تعذر الاتصال بالخادم');
+            }
+          });
+        });
+
+      } catch (error) {
+        resultsTableBody.innerHTML = '<tr><td colspan="4">تعذر تحميل النتائج</td></tr>';
+      }
+    }
+
+    // تحميل الرسائل المرسلة وعرضها
+    async function loadMessages() {
+      try {
+        const res = await fetch('/api/admin/messages');
+        if (!res.ok) throw new Error('خطأ في تحميل الرسائل');
+        const messages = await res.json();
+
+        sentMessagesTableBody.innerHTML = '';
+        messages.forEach(msg => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${msg.email}</td>
+            <td>${msg.message}</td>
+            <td>${new Date(msg.sentAt).toLocaleString('ar-EG')}</td>
+            <td><button class="danger" data-email="${msg.email}">حذف</button></td>
+          `;
+          sentMessagesTableBody.appendChild(tr);
+        });
+
+        // حذف رسالة عند الضغط على زر الحذف
+        sentMessagesTableBody.querySelectorAll('button').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const emailToDelete = btn.getAttribute('data-email');
+            if (!confirm(`هل أنت متأكد من حذف الرسالة المرسلة إلى: ${emailToDelete} ؟`)) return;
+
+            try {
+              const res = await fetch('/api/admin/message', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: emailToDelete })
+              });
+              const data = await res.json();
+              if (res.ok) {
+                alert(data.message);
+                loadMessages();
+              } else {
+                alert(data.error || 'حدث خطأ أثناء الحذف');
+              }
+            } catch {
+              alert('تعذر الاتصال بالخادم');
+            }
+          });
+        });
+
+      } catch (error) {
+        sentMessagesTableBody.innerHTML = '<tr><td colspan="4">تعذر تحميل الرسائل</td></tr>';
+      }
+    }
+
+    // رفع نتيجة جديدة
+    uploadResultForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const phone = document.getElementById('resultPhone').value.trim();
+      const fileInput = document.getElementById('resultFile');
+      
+      if (!phone || !fileInput.files[0]) {
+        uploadResponse.textContent = 'يرجى إدخال رقم الهاتف واختيار ملف';
+        uploadResponse.classList.add('error');
+        return;
+      }
+      
+      const formData = new FormData();
+      formData.append('phone', phone);
+      formData.append('resultFile', fileInput.files[0]);
+      
+      try {
+        const res = await fetch('/api/upload-result', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok) {
+          uploadResponse.textContent = data.message;
+          uploadResponse.classList.remove('error');
+          uploadResultForm.reset();
+          loadResults();
+        } else {
+          uploadResponse.textContent = data.error || 'حدث خطأ أثناء الرفع';
+          uploadResponse.classList.add('error');
+        }
+      } catch (error) {
+        uploadResponse.textContent = 'تعذر الاتصال بالخادم';
+        uploadResponse.classList.add('error');
+      }
+    });
+
+    // إرسال رسالة إلى مستخدم
+    messageForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('emailInput').value.trim();
+      const message = document.getElementById('messageInput').value.trim();
+
+      if (!email || !message) {
+        sendResponse.textContent = 'يرجى تعبئة البريد الإلكتروني والرسالة';
+        sendResponse.classList.add('error');
+        return;
+      }
+      sendResponse.textContent = '';
+      sendResponse.classList.remove('error');
+
+      try {
+        const res = await fetch('/api/admin/message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, message })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          sendResponse.textContent = data.message;
+          document.getElementById('emailInput').value = '';
+          document.getElementById('messageInput').value = '';
+          loadMessages();
+        } else {
+          sendResponse.textContent = data.error || 'حدث خطأ أثناء إرسال الرسالة';
+          sendResponse.classList.add('error');
+        }
+      } catch {
+        sendResponse.textContent = 'تعذر الاتصال بالخادم';
+        sendResponse.classList.add('error');
+      }
+    });
+
+    // تسجيل خروج الادمن
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        const res = await fetch('/api/admin/logout', { method: 'POST' });
+        if (res.ok) {
+          window.location.href = '/admin-login.html';
+        } else {
+          alert('حدث خطأ أثناء تسجيل الخروج');
+        }
+      } catch {
+        alert('تعذر الاتصال بالخادم');
+      }
+    });
+
+    // تحميل البيانات عند فتح الصفحة
+    loadUsers();
+    loadBookings();
+    loadResults();
+    loadMessages();
+  </script>
+</body>
+</html>
