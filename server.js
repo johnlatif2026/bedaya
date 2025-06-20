@@ -221,7 +221,7 @@ app.post('/api/admin/message', checkAuth, async (req, res) => {
     await transporter.sendMail({
       from: `"Bedaya" <${process.env.SMTP_USER}>`,
       to: email,
-      subject: 'Login PUBG MOBILE',
+      subject: 'مركز Bedaya',
       text: message,
       html: `<p>${message}</p>`
     });
