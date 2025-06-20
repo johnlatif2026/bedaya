@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ar">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -12,12 +11,10 @@
       direction: rtl;
       background: #f0f0f0;
     }
-
     h1 {
       text-align: center;
       margin-bottom: 20px;
     }
-
     button {
       background-color: #007bff;
       color: white;
@@ -28,45 +25,36 @@
       font-size: 1em;
       margin: 5px;
     }
-
     button:hover {
       background-color: #0056b3;
     }
-
     button.danger {
       background-color: #dc3545;
     }
-
     button.danger:hover {
       background-color: #c82333;
     }
-
     button.success {
       background-color: #28a745;
     }
-
     button.success:hover {
       background-color: #218838;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
       background: white;
     }
-
     th, td {
       border: 1px solid #ccc;
       padding: 8px 12px;
       text-align: center;
     }
-
     th {
       background-color: #007bff;
       color: white;
     }
-
     .section {
       margin-top: 40px;
       background: white;
@@ -74,13 +62,11 @@
       border-radius: 5px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-
     textarea {
       width: 100%;
       height: 80px;
       resize: vertical;
     }
-
     input[type="email"],
     input[type="text"],
     input[type="tel"],
@@ -91,17 +77,14 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-
     .response {
       margin-top: 10px;
       font-weight: bold;
       color: green;
     }
-
     .error {
       color: red;
     }
-
     .upload-area {
       border: 2px dashed #007bff;
       padding: 20px;
@@ -109,15 +92,14 @@
       margin: 20px 0;
       border-radius: 5px;
     }
-
     .message-content {
       max-width: 300px;
       word-wrap: break-word;
       text-align: right;
+      white-space: pre-wrap;
     }
   </style>
 </head>
-
 <body>
   <h1>لوحة تحكم الادمن</h1>
 
@@ -132,15 +114,15 @@
           <th>البريد الإلكتروني</th>
           <th>رقم التليفون</th>
           <th>تاريخ الإرسال</th>
+          <th>الرسائل</th>
           <th>حذف</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- هنا تظهر بيانات المستخدمين -->
-      </tbody>
+      <tbody></tbody>
     </table>
   </div>
 
+  <!-- باقي الأقسام كما هي بدون تغيير -->
   <div class="section">
     <h2>الحجوزات الواردة</h2>
     <table id="bookingsTable">
@@ -154,9 +136,7 @@
           <th>حذف</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- هنا تظهر الحجوزات -->
-      </tbody>
+      <tbody></tbody>
     </table>
   </div>
 
@@ -187,9 +167,7 @@
           <th>حذف</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- هنا تظهر النتائج -->
-      </tbody>
+      <tbody></tbody>
     </table>
   </div>
 
@@ -218,9 +196,7 @@
           <th>حذف</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- هنا تظهر الرسائل المرسلة -->
-      </tbody>
+      <tbody></tbody>
     </table>
   </div>
 
@@ -235,7 +211,7 @@
     const sendResponse = document.getElementById('sendResponse');
     const uploadResponse = document.getElementById('uploadResponse');
 
-    // تحميل بيانات المستخدمين وعرضها
+    // تحميل بيانات المستخدمين مع الرسائل
     async function loadUsers() {
       try {
         const res = await fetch('/api/admin/users');
@@ -250,12 +226,12 @@
             <td>${user.email}</td>
             <td>${user.phone}</td>
             <td>${new Date(user.receivedAt).toLocaleString('ar-EG')}</td>
+            <td class="message-content">${user.messages}</td>
             <td><button class="danger" data-email="${user.email}">حذف</button></td>
           `;
           usersTableBody.appendChild(tr);
         });
 
-        // حذف مستخدم عند الضغط على زر الحذف
         usersTableBody.querySelectorAll('button').forEach(btn => {
           btn.addEventListener('click', async () => {
             const emailToDelete = btn.getAttribute('data-email');
@@ -277,13 +253,12 @@
             }
           });
         });
-
       } catch (error) {
-        usersTableBody.innerHTML = '<tr><td colspan="5">تعذر تحميل بيانات المستخدمين</td></tr>';
+        usersTableBody.innerHTML = '<tr><td colspan="6">تعذر تحميل بيانات المستخدمين</td></tr>';
       }
     }
 
-    // تحميل الحجوزات وعرضها
+    // باقي الدوال كما هي بدون تغيير (loadBookings, loadResults, loadMessages)
     async function loadBookings() {
       try {
         const res = await fetch('/api/admin/bookings');
@@ -304,7 +279,6 @@
           bookingsTableBody.appendChild(tr);
         });
 
-        // حذف حجز عند الضغط على زر الحذف
         bookingsTableBody.querySelectorAll('button').forEach(btn => {
           btn.addEventListener('click', async () => {
             const phoneToDelete = btn.getAttribute('data-phone');
@@ -326,13 +300,11 @@
             }
           });
         });
-
       } catch (error) {
         bookingsTableBody.innerHTML = '<tr><td colspan="6">تعذر تحميل الحجوزات</td></tr>';
       }
     }
 
-    // تحميل النتائج وعرضها
     async function loadResults() {
       try {
         const res = await fetch('/api/admin/results');
@@ -351,7 +323,6 @@
           resultsTableBody.appendChild(tr);
         });
 
-        // حذف نتيجة عند الضغط على زر الحذف
         resultsTableBody.querySelectorAll('button').forEach(btn => {
           btn.addEventListener('click', async () => {
             const phoneToDelete = btn.getAttribute('data-phone');
@@ -373,44 +344,37 @@
             }
           });
         });
-
       } catch (error) {
         resultsTableBody.innerHTML = '<tr><td colspan="4">تعذر تحميل النتائج</td></tr>';
       }
     }
 
-    // تحميل الرسائل المرسلة وعرضها
     async function loadMessages() {
       try {
         const res = await fetch('/api/admin/messages');
         if (!res.ok) throw new Error('خطأ في تحميل الرسائل');
         const messages = await res.json();
 
-        console.log('Received messages:', messages); // Debugging
-
         sentMessagesTableBody.innerHTML = '';
-        messages.forEach(msg => {
+        messages.forEach((msg, index) => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td>${msg.email}</td>
-            <td class="message-content">${msg.message || 'لا يوجد رسالة'}</td>
+            <td class="message-content">${msg.message}</td>
             <td>${new Date(msg.sentAt).toLocaleString('ar-EG')}</td>
-            <td><button class="danger" data-email="${msg.email}">حذف</button></td>
+            <td><button class="danger" data-index="${index}">حذف</button></td>
           `;
           sentMessagesTableBody.appendChild(tr);
         });
 
-        // حذف رسالة عند الضغط على زر الحذف
         sentMessagesTableBody.querySelectorAll('button').forEach(btn => {
           btn.addEventListener('click', async () => {
-            const emailToDelete = btn.getAttribute('data-email');
-            if (!confirm(`هل أنت متأكد من حذف الرسالة المرسلة إلى: ${emailToDelete} ؟`)) return;
+            const index = btn.getAttribute('data-index');
+            if (!confirm('هل أنت متأكد من حذف هذه الرسالة؟')) return;
 
             try {
-              const res = await fetch('/api/admin/message', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: emailToDelete })
+              const res = await fetch(`/api/admin/message/${index}`, {
+                method: 'DELETE'
               });
               const data = await res.json();
               if (res.ok) {
@@ -424,14 +388,13 @@
             }
           });
         });
-
       } catch (error) {
         console.error('Error loading messages:', error);
         sentMessagesTableBody.innerHTML = '<tr><td colspan="4">تعذر تحميل الرسائل</td></tr>';
       }
     }
 
-    // رفع نتيجة جديدة
+    // باقي الكود كما هو بدون تغيير
     uploadResultForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -471,7 +434,6 @@
       }
     });
 
-    // إرسال رسالة إلى مستخدم
     messageForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('emailInput').value.trim();
@@ -497,6 +459,7 @@
           document.getElementById('emailInput').value = '';
           document.getElementById('messageInput').value = '';
           loadMessages();
+          loadUsers(); // نعيد تحميل المستخدمين لتحديث الرسائل
         } else {
           sendResponse.textContent = data.error || 'حدث خطأ أثناء إرسال الرسالة';
           sendResponse.classList.add('error');
@@ -507,7 +470,6 @@
       }
     });
 
-    // تسجيل خروج الادمن
     logoutBtn.addEventListener('click', async () => {
       try {
         const res = await fetch('/api/admin/logout', { method: 'POST' });
