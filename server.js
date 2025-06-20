@@ -11,7 +11,7 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// بيانات مخزنة مؤقتاً في الذاكرة (ممكن تستبدل بقاعدة بيانات)
+// بيانات مخزنة مؤقتاً في الذاكرة
 const usersData = [];
 const adminMessages = [];
 const bookingsData = [];
@@ -44,7 +44,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false } // لو شغال على https خليها true
+  cookie: { secure: false }
 }));
 
 // Serve static files
@@ -59,7 +59,7 @@ function checkAuth(req, res, next) {
   }
 }
 
-// إعداد nodemailer مع بيانات SMTP من .env
+// إعداد nodemailer
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
@@ -70,7 +70,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// استقبال بيانات المستخدم من نموذج الموقع العادي
+// استقبال بيانات المستخدم
 app.post('/api/submit', (req, res) => {
   const { name, email, phone } = req.body;
   if (!name || !email || !phone) {
@@ -88,7 +88,6 @@ app.post('/api/booking', (req, res) => {
   }
   bookingsData.push({ name, phone, date, time, receivedAt: new Date() });
   
-  // إرسال إشعار للإدارة
   if (process.env.ADMIN_EMAIL) {
     transporter.sendMail({
       from: `"Bedaya System" <${process.env.SMTP_USER}>`,
@@ -151,22 +150,30 @@ app.post('/api/admin/logout', checkAuth, (req, res) => {
   });
 });
 
-// جلب بيانات المستخدمين (محمي)
+// جلب بيانات المستخدمين
+// جلب بيانات المستخدمين مع الرسائل
 app.get('/api/admin/users', checkAuth, (req, res) => {
-  res.json(usersData);
+  const usersWithMessages = usersData.map(user => {
+    const userMessages = adminMessages.filter(msg => msg.email === user.email);
+    return {
+      ...user,
+      messages: userMessages.map(msg => msg.message).join('\n\n') || 'لا توجد رسائل'
+    };
+  });
+  res.json(usersWithMessages);
 });
 
-// جلب بيانات الحجوزات (محمي)
+// جلب بيانات الحجوزات
 app.get('/api/admin/bookings', checkAuth, (req, res) => {
   res.json(bookingsData);
 });
 
-// جلب بيانات النتائج (محمي)
+// جلب بيانات النتائج
 app.get('/api/admin/results', checkAuth, (req, res) => {
   res.json(resultsData);
 });
 
-// حذف مستخدم معين بناءً على البريد (محمي)
+// حذف مستخدم
 app.delete('/api/admin/user/:email', checkAuth, (req, res) => {
   const email = decodeURIComponent(req.params.email);
   const index = usersData.findIndex(user => user.email === email);
@@ -177,7 +184,7 @@ app.delete('/api/admin/user/:email', checkAuth, (req, res) => {
   res.json({ message: `تم حذف المستخدم ${email} بنجاح` });
 });
 
-// حذف حجز (محمي)
+// حذف حجز
 app.delete('/api/admin/booking/:phone', checkAuth, (req, res) => {
   const phone = decodeURIComponent(req.params.phone);
   const index = bookingsData.findIndex(b => b.phone === phone);
@@ -188,7 +195,7 @@ app.delete('/api/admin/booking/:phone', checkAuth, (req, res) => {
   res.json({ message: `تم حذف الحجز لرقم ${phone} بنجاح` });
 });
 
-// حذف نتيجة (محمي)
+// حذف نتيجة
 app.delete('/api/admin/result/:phone', checkAuth, (req, res) => {
   const phone = decodeURIComponent(req.params.phone);
   const index = resultsData.findIndex(r => r.phone === phone);
@@ -196,7 +203,6 @@ app.delete('/api/admin/result/:phone', checkAuth, (req, res) => {
     return res.status(404).json({ error: 'النتيجة غير موجودة' });
   }
   
-  // حذف الملف من السيرفر
   const filePath = path.join(__dirname, 'public', resultsData[index].fileUrl);
   fs.unlink(filePath, (err) => {
     if (err) console.error('Error deleting file:', err);
@@ -206,14 +212,10 @@ app.delete('/api/admin/result/:phone', checkAuth, (req, res) => {
   res.json({ message: `تم حذف النتيجة لرقم ${phone} بنجاح` });
 });
 
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
-});
-
-// إضافة رسالة الرد (الإيميل والرسالة) من الادمن (محمي) + إرسال إيميل فعلي
+// إرسال رسالة
 app.post('/api/admin/message', checkAuth, async (req, res) => {
   const { email, message } = req.body;
-  if (!email || !message) {
+  if (!email || !message || message.trim() === "") {
     return res.status(400).json({ error: 'البريد الإلكتروني والرسالة مطلوبين' });
   }
 
@@ -223,12 +225,12 @@ app.post('/api/admin/message', checkAuth, async (req, res) => {
       to: email,
       subject: 'مركز Bedaya',
       text: message,
-      html: `<p>${message.replace(/\n/g, '<br>')}</p>`
+      html: `<p>${message}</p>`
     });
 
     adminMessages.push({ 
       email, 
-      message: message.replace(/\n/g, '<br>'),
+      message,
       sentAt: new Date() 
     });
     res.json({ message: 'تم إرسال الرسالة بنجاح' });
@@ -238,32 +240,28 @@ app.post('/api/admin/message', checkAuth, async (req, res) => {
   }
 });
 
-// جلب كل الرسائل (محمي)
+// جلب الرسائل
 app.get('/api/admin/messages', checkAuth, (req, res) => {
   res.json(adminMessages);
 });
 
-// حذف رسالة إدارية (محمي)
-app.delete('/api/admin/message', checkAuth, (req, res) => {
-  const { email } = req.body;
-  if (!email) {
-    return res.status(400).json({ error: 'البريد الإلكتروني مطلوب للحذف' });
+// حذف رسالة
+app.delete('/api/admin/message/:index', checkAuth, (req, res) => {
+  const index = parseInt(req.params.index);
+  if (isNaN(index)) {
+    return res.status(400).json({ error: 'معرف الرسالة غير صالح' });
   }
-  const index = adminMessages.findIndex(msg => msg.email === email);
-  if (index === -1) {
+  if (index < 0 || index >= adminMessages.length) {
     return res.status(404).json({ error: 'الرسالة غير موجودة' });
   }
+  
   adminMessages.splice(index, 1);
   res.json({ message: 'تم حذف الرسالة بنجاح' });
 });
 
-// صفحة الادمن - حماية الوصول لصفحات الادمن
-app.get('/admin-dashboard.html', (req, res, next) => {
-  if (req.session && req.session.isLoggedIn) {
-    next();
-  } else {
-    res.redirect('/admin-login.html');
-  }
+// Routes
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
 // تشغيل السيرفر
