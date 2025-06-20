@@ -223,10 +223,14 @@ app.post('/api/admin/message', checkAuth, async (req, res) => {
       to: email,
       subject: 'مركز Bedaya',
       text: message,
-      html: `<p>${message}</p>`
+      html: `<p>${message.replace(/\n/g, '<br>')}</p>`
     });
 
-    adminMessages.push({ email, message, sentAt: new Date() });
+    adminMessages.push({ 
+      email, 
+      message: message.replace(/\n/g, '<br>'),
+      sentAt: new Date() 
+    });
     res.json({ message: 'تم إرسال الرسالة بنجاح' });
   } catch (err) {
     console.error('خطأ في إرسال الإيميل:', err);
