@@ -56,8 +56,7 @@
       background: white;
     }
 
-    th,
-    td {
+    th, td {
       border: 1px solid #ccc;
       padding: 8px 12px;
       text-align: center;
@@ -110,6 +109,12 @@
       margin: 20px 0;
       border-radius: 5px;
     }
+
+    .message-content {
+      max-width: 300px;
+      word-wrap: break-word;
+      text-align: right;
+    }
   </style>
 </head>
 
@@ -126,7 +131,6 @@
           <th>الاسم</th>
           <th>البريد الإلكتروني</th>
           <th>رقم التليفون</th>
-          <th>الرسالة</th>
           <th>تاريخ الإرسال</th>
           <th>حذف</th>
         </tr>
@@ -245,7 +249,6 @@
             <td>${user.name}</td>
             <td>${user.email}</td>
             <td>${user.phone}</td>
-            <td>${user.message || 'لا توجد رسالة'}</td>
             <td>${new Date(user.receivedAt).toLocaleString('ar-EG')}</td>
             <td><button class="danger" data-email="${user.email}">حذف</button></td>
           `;
@@ -276,7 +279,7 @@
         });
 
       } catch (error) {
-        usersTableBody.innerHTML = '<tr><td colspan="6">تعذر تحميل بيانات المستخدمين</td></tr>';
+        usersTableBody.innerHTML = '<tr><td colspan="5">تعذر تحميل بيانات المستخدمين</td></tr>';
       }
     }
 
@@ -383,12 +386,14 @@
         if (!res.ok) throw new Error('خطأ في تحميل الرسائل');
         const messages = await res.json();
 
+        console.log('Received messages:', messages); // Debugging
+
         sentMessagesTableBody.innerHTML = '';
         messages.forEach(msg => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td>${msg.email}</td>
-            <td>${msg.message}</td>
+            <td class="message-content">${msg.message || 'لا يوجد رسالة'}</td>
             <td>${new Date(msg.sentAt).toLocaleString('ar-EG')}</td>
             <td><button class="danger" data-email="${msg.email}">حذف</button></td>
           `;
@@ -421,6 +426,7 @@
         });
 
       } catch (error) {
+        console.error('Error loading messages:', error);
         sentMessagesTableBody.innerHTML = '<tr><td colspan="4">تعذر تحميل الرسائل</td></tr>';
       }
     }
