@@ -5,8 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Bedaya</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+  <style>
+    .dark {
+      color-scheme: dark;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
 
   <!-- Header + Navbar -->
   <header class="bg-gray-900 text-white py-4 fixed w-full top-0 left-0 shadow-lg z-10">
@@ -22,6 +32,9 @@
           <li><a href="#contact" class="hover:text-indigo-400">اتصل بنا</a></li>
         </ul>
       </nav>
+      <button id="themeToggle" class="ml-4 px-3 py-1 bg-indigo-600 rounded">
+        <span id="themeIcon">🌙</span>
+      </button>
     </div>
   </header>
 
@@ -40,43 +53,75 @@
   <div class="py-16"></div> <!-- مسافة بعد الصفحة الرئيسية -->
 
   <!-- معلومات عنا -->
-  <section id="معلومات_عنّا" class="py-20 bg-white">
+  <section id="معلومات_عنّا" class="py-20 bg-white dark:bg-gray-800">
     <div class="container mx-auto text-center px-6">
       <h2 class="text-4xl font-bold mb-6">معلومات عنا</h2>
-      <p class="text-lg text-gray-600 mb-4">مركز بداية للتدخل المبكر والتأهيل (للتخاطب-تنمية المهارات-تعديل السلوك-صعوبات التعلم-ارشاد نفسي-اختبارات نفسية و مقاييس).</p>
+      <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">مركز بداية للتدخل المبكر والتأهيل (للتخاطب-تنمية المهارات-تعديل السلوك-صعوبات التعلم-ارشاد نفسي-اختبارات نفسية و مقاييس).</p>
     </div>
   </section>
 
   <div class="py-16"></div>
 
+<section id="المكان الخاص بنا" class="py-20 bg-gray-100">
+        <div class="container mx-auto text-center px-6">
+            <h2 class="text-4xl font-bold mb-12">المكان الخاص بنا و الاتصال بنا</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 shadow-lg rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4">العنوان</h3>
+                    <p class="text-gray-600">٢٩ شارع سلطان ابو العلا العروبة امبابة</p>
+                </div>
+                <div class="bg-white p-6 shadow-lg rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4">وقت العمل</h3>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                     <p class="text-gray-700">السبت من 2 إلي 11</p>
+                    <p class="text-gray-700">الاحد من 6 إلي 11</p>
+                    <p class="text-gray-700">الاتنين من 6 إلي 11</p>
+                    <p class="text-gray-700">الثلاثاء من 6 إلي 11</p>
+                    <p class="text-gray-600">الاربعاء من 6 إلي 11</p>
+                    <p class="text-gray-600">الخميس من 6 إلي 11</p>
+                    <p class="text-gray-600">الجمعة من 2 إلي 11</p>
+                    </div>
+                    <div class="bg-white p-6 shadow-lg rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4">الاتصال بنا</h3>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                    <a href="https://wa.me/201278127159" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 flex items-center space-x-2">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>كلمنا واتساب</span></a>
+
+
+                    <br>
+                     <a href="tel:01278127159" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">كلمنا تليفون</a>
+
+                </div>
+                  </section>
   <!-- الحجز -->
-  <section id="booking" class="py-20 bg-white">
+  <section id="booking" class="py-20 bg-white dark:bg-gray-800">
     <div class="container mx-auto px-6 max-w-lg">
       <h2 class="text-4xl font-bold mb-6 text-center">احجز موعدك</h2>
-      <form id="bookingForm" class="bg-gray-100 p-6 rounded-lg shadow-md">
+      <form id="bookingForm" class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md">
         <label class="block mb-2 font-semibold">الاسم:</label>
-        <input type="text" id="bName" class="w-full mb-4 p-2 border rounded" required>
+        <input type="text" id="bName" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
         <label class="block mb-2 font-semibold">رقم التليفون:</label>
-        <input type="tel" id="bPhone" class="w-full mb-4 p-2 border rounded" required>
+        <input type="tel" id="bPhone" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
         <label class="block mb-2 font-semibold">اختر التاريخ:</label>
-        <input type="date" id="bDate" class="w-full mb-4 p-2 border rounded" required>
+        <input type="date" id="bDate" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
         <label class="block mb-2 font-semibold">اختر الوقت:</label>
-        <input type="time" id="bTime" class="w-full mb-4 p-2 border rounded" required>
+        <input type="time" id="bTime" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
         <button type="submit" class="bg-indigo-500 hover:bg-indigo-700 text-white py-3 px-6 rounded w-full">احجز الآن</button>
       </form>
-      <p id="bookingResponse" class="text-green-600 font-bold mt-4"></p>
+      <p id="bookingResponse" class="text-green-600 dark:text-green-400 font-bold mt-4"></p>
     </div>
   </section>
 
   <div class="py-16"></div>
 
   <!-- الاستعلام عن النتيجة -->
-  <section id="inquiry" class="py-20 bg-gray-100">
+  <section id="inquiry" class="py-20 bg-gray-100 dark:bg-gray-700">
     <div class="container mx-auto px-6 max-w-lg">
       <h2 class="text-4xl font-bold mb-6 text-center">استعلم عن نتيجتك</h2>
-      <form id="inquiryForm" class="bg-white p-6 rounded-lg shadow-md">
+      <form id="inquiryForm" class="bg-white dark:bg-gray-600 p-6 rounded-lg shadow-md">
         <label class="block mb-2 font-semibold">أدخل رقم التليفون:</label>
-        <input type="tel" id="iPhone" class="w-full mb-4 p-2 border rounded" required>
+        <input type="tel" id="iPhone" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-500 text-gray-800 dark:text-white" required>
         <button type="submit" class="bg-green-500 hover:bg-green-700 text-white py-3 px-6 rounded w-full">ابحث</button>
       </form>
       <div id="inquiryResponse" class="mt-4">
@@ -87,22 +132,28 @@
 
   <div class="py-16"></div>
 
-  <!-- اتصل بنا -->
-  <section id="contact" class="py-20 bg-gray-100">
+   <!-- قسم التواصل -->
+  <section id="contact" class="py-20">
     <div class="container mx-auto text-center px-6 max-w-lg">
       <h2 class="text-4xl font-bold mb-6">لو في استفسار!</h2>
-      <form id="contactForm" class="bg-white p-6 rounded-lg shadow-md">
-        <label class="block mb-2 font-semibold">الاسم:</label>
-        <input type="text" id="cName" class="w-full mb-4 p-2 border rounded" required>
-        <label class="block mb-2 font-semibold">البريد الإلكتروني:</label>
-        <input type="email" id="cEmail" class="w-full mb-4 p-2 border rounded" required>
-        <label class="block mb-2 font-semibold">رقم التليفون:</label>
-        <input type="tel" id="cPhone" class="w-full mb-4 p-2 border rounded" required>
-        <label class="block mb-2 font-semibold">تفاصيل الرسالة:</label>
-        <textarea id="cMessage" class="w-full mb-4 p-2 border rounded" rows="4" required></textarea>
-        <button type="submit" class="bg-indigo-500 hover:bg-indigo-700 text-white py-3 px-6 rounded w-full">إرسال</button>
+      
+      <form id="contactForm" class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md">
+        <label for="cName" class="block mb-2 font-semibold">الاسم:</label>
+        <input type="text" id="cName" name="name" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
+
+        <label for="cEmail" class="block mb-2 font-semibold">البريد الإلكتروني:</label>
+        <input type="email" id="cEmail" name="email" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
+
+        <label for="cPhone" class="block mb-2 font-semibold">رقم التليفون:</label>
+        <input type="tel" id="cPhone" name="phone" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
+
+        <label for="cMessage" class="block mb-2 font-semibold">تفاصيل الرسالة:</label>
+        <textarea id="cMessage" name="message" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" rows="4" required></textarea>
+
+        <div id="contactResponse" class="mb-4 text-sm"></div>
+
+        <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white py-3 px-6 rounded w-full">إرسال</button>
       </form>
-      <p id="contactResponse" class="text-green-600 font-bold mt-4"></p>
     </div>
   </section>
 
@@ -169,74 +220,94 @@
 
         if (data.success) {
           inquiryResponse.innerHTML = `
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+            <div class="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-200 px-4 py-3 rounded">
               <h3 class="font-bold">تم العثور على النتيجة</h3>
               <p>رقم الهاتف: ${phone}</p>
               <p class="mt-2">
-                <a href="${data.result.fileUrl}" class="text-blue-600 underline" target="_blank">
+                <a href="${data.result.fileUrl}" class="text-blue-600 dark:text-blue-400 underline" target="_blank">
                   اضغط هنا لتحميل النتيجة
                 </a>
               </p>
-              <p class="text-sm text-gray-600 mt-2">
+              <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">
                 تم الرفع في: ${new Date(data.result.uploadedAt).toLocaleString('ar-EG')}
               </p>
             </div>
           `;
         } else {
           inquiryResponse.innerHTML = `
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <div class="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded">
               ${data.message}
             </div>
           `;
         }
       } catch (error) {
         inquiryResponse.innerHTML = `
-          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <div class="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded">
             تعذر الاتصال بالخادم. حاول مرة أخرى.
           </div>
         `;
       }
     });
 
-    // معالجة نموذج الاتصال
-    const contactForm = document.getElementById('contactForm');
-    const contactResponse = document.getElementById('contactResponse');
 
-    contactForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const contactData = {
-        name: document.getElementById('cName').value.trim(),
-        email: document.getElementById('cEmail').value.trim(),
-        phone: document.getElementById('cPhone').value.trim(),
-        message: document.getElementById('cMessage').value.trim()
-      };
 
-      try {
-        const res = await fetch('/api/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(contactData)
-        });
+    // تبديل الوضع الداكن/الفاتح
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    
+    // تحميل التفضيل المحفوظ
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.documentElement.classList.add('dark');
+      themeIcon.textContent = '☀️';
+    }
 
-        const data = await res.json();
-
-        if (res.ok) {
-          contactResponse.textContent = data.message;
-          contactResponse.classList.remove('text-red-600');
-          contactResponse.classList.add('text-green-600');
-          contactForm.reset();
-        } else {
-          contactResponse.textContent = data.error || 'حدث خطأ أثناء الإرسال';
-          contactResponse.classList.remove('text-green-600');
-          contactResponse.classList.add('text-red-600');
-        }
-      } catch (error) {
-        contactResponse.textContent = 'تعذر الاتصال بالخادم. حاول مرة أخرى.';
-        contactResponse.classList.remove('text-green-600');
-        contactResponse.classList.add('text-red-600');
-      }
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('darkMode', isDark);
+      themeIcon.textContent = isDark ? '☀️' : '🌙';
     });
-  </script>
+  document.getElementById('contactForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('cName').value.trim();
+    const email = document.getElementById('cEmail').value.trim();
+    const phone = document.getElementById('cPhone').value.trim();
+    const message = document.getElementById('cMessage').value.trim();
+
+    if (!name || !email || !phone || !message) {
+      alert('من فضلك املا كل الحقول');
+      return;
+    }
+
+    try {
+      // الخطوة الأولى: حفظ بيانات المستخدم
+      const submitRes = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, phone })
+      });
+
+      const submitData = await submitRes.json();
+      console.log('Submit Response:', submitData);
+
+      // الخطوة الثانية: إرسال الرسالة
+      const msgRes = await fetch('/api/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message })
+      });
+
+      const msgData = await msgRes.json();
+      alert(msgData.message || 'تم الإرسال بنجاح');
+
+      // تفريغ النموذج بعد الإرسال
+      document.getElementById('contactForm').reset();
+    } catch (error) {
+      console.error('Error:', error);
+      alert('حدث خطأ أثناء الإرسال. حاول مرة أخرى.');
+    }
+  });
+</script>
+
 </body>
 </html>
