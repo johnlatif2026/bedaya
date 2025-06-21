@@ -242,7 +242,7 @@ app.post('/api/admin/message', checkAuth, async (req, res) => {
       html: `<p>${message}</p>`
     });
 
-    adminMessages.push({ email, message, sentAt: new Date() });
+adminMessages.push({ email, message, name, phone: req.body.phone || null, sentAt: new Date() });
     res.json({ message: 'تم إرسال الرسالة بنجاح' });
   } catch (err) {
     console.error('خطأ في إرسال الإيميل:', err);
