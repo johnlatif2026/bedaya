@@ -95,14 +95,17 @@ app.post('/api/message', async (req, res) => {
       `
     });
 
-adminMessages.push({ email, message, name, phone: req.body.phone || null, sentAt: new Date() });
+    // ✅ أضف هذا السطر هنا
+    adminMessages.push({ email, message, name, phone: req.body.phone || null, sentAt: new Date() });
 
     res.json({ message: 'تم إرسال الرسالة بنجاح' });
+
   } catch (err) {
     console.error('خطأ في إرسال الرسالة:', err);
     res.status(500).json({ error: 'حدث خطأ أثناء إرسال الرسالة' });
   }
 });
+
 
 // حجز موعد
 app.post('/api/booking', (req, res) => {
@@ -242,7 +245,8 @@ app.post('/api/admin/message', checkAuth, async (req, res) => {
       html: `<p>${message}</p>`
     });
 
-adminMessages.push({ email, message, name, phone: req.body.phone || null, sentAt: new Date() });
+    adminSentMessages.push({ email, message, sentAt: new Date() });
+
     res.json({ message: 'تم إرسال الرسالة بنجاح' });
   } catch (err) {
     console.error('خطأ في إرسال الإيميل:', err);
@@ -250,15 +254,20 @@ adminMessages.push({ email, message, name, phone: req.body.phone || null, sentAt
   }
 });
 
+
 // جلب الرسائل
 app.get('/api/admin/messages', checkAuth, (req, res) => {
   res.json(adminMessages);
 });
 
 // حذف رسالة
-app.delete('/api/admin/message/:email', (req, res) => {
-  const email = req.params.email;
-  // تنفيذ الحذف من قاعدة البيانات ثم:
+app.delete('/api/admin/message/:index', checkAuth, (req, res) => {
+  const index = parseInt(req.params.index);
+  if (isNaN(index) || index < 0 || index >= adminMessages.length) {
+    return res.status(400).json({ error: 'رقم الرسالة غير صالح' });
+  }
+
+  adminMessages.splice(index, 1);
   res.json({ message: 'تم حذف الرسالة بنجاح' });
 });
 
