@@ -38,12 +38,10 @@
       color: var(--text-color);
       transition: all 0.3s ease;
     }
-
     h1 {
       text-align: center;
       margin-bottom: 20px;
     }
-
     button {
       background-color: var(--button-bg);
       color: white;
@@ -55,45 +53,36 @@
       margin: 5px;
       transition: background-color 0.3s;
     }
-
     button:hover {
       background-color: var(--button-hover);
     }
-
     button.danger {
       background-color: var(--danger-bg);
     }
-
     button.danger:hover {
       background-color: var(--danger-hover);
     }
-
     button.success {
       background-color: var(--success-bg);
     }
-
     button.success:hover {
       background-color: var(--success-hover);
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
       background: var(--card-bg);
     }
-
     th, td {
-      border: 1px solid var(--border-color);
+      border: 1px solid #ccc;
       padding: 8px 12px;
       text-align: center;
     }
-
     th {
       background-color: var(--th-bg);
       color: var(--th-color);
     }
-
     .section {
       margin-top: 40px;
       background: var(--card-bg);
@@ -101,7 +90,6 @@
       border-radius: 5px;
       box-shadow: var(--card-shadow);
     }
-
     textarea {
       width: 100%;
       height: 80px;
@@ -110,7 +98,6 @@
       color: var(--text-color);
       border: 1px solid var(--border-color);
     }
-
     input[type="email"],
     input[type="text"],
     input[type="tel"],
@@ -123,7 +110,6 @@
       background: var(--card-bg);
       color: var(--text-color);
     }
-
     .response {
       margin-top: 10px;
       font-weight: bold;
@@ -132,11 +118,9 @@
     .success {
       color: #28a745;
     }
-
     .error {
       color: #dc3545;
     }
-
     .upload-area {
       border: 2px dashed var(--button-bg);
       padding: 20px;
@@ -144,20 +128,20 @@
       margin: 20px 0;
       border-radius: 5px;
     }
-
     .message-content {
-      max-width: 300px;
-      word-wrap: break-word;
-      text-align: right;
-      white-space: pre-wrap;
-    }
+  max-width: 300px;
+  word-wrap: break-word;
+  text-align: right;
+  white-space: pre-wrap;
+}
 
-    .message-item {
-      margin-bottom: 5px;
-      padding: 5px;
-      background: rgba(0,0,0,0.1);
-      border-radius: 3px;
-    }
+.message-item {
+  margin-bottom: 5px;
+  padding: 5px;
+  background: rgba(0,0,0,0.1);
+  border-radius: 3px;
+}
+
 
     .dark-mode .message-item {
       background: rgba(255,255,255,0.1);
@@ -194,6 +178,7 @@
     </table>
   </div>
 
+  <!-- باقي الأقسام كما هي بدون تغيير -->
   <div class="section">
     <h2>الحجوزات الواردة</h2>
     <table id="bookingsTable">
@@ -302,7 +287,7 @@
     // تحميل بيانات المستخدمين مع الرسائل
     async function loadUsers() {
       try {
-        const res = await fetch('/api/admin/users');
+        const res = await fetch('/api/admin/message');
         if (!res.ok) throw new Error('خطأ في تحميل بيانات المستخدمين');
         const users = await res.json();
 
@@ -321,14 +306,15 @@
             ).join('');
           }
           
-          tr.innerHTML = `
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-            <td>${user.phone}</td>
-            <td>${new Date(user.receivedAt).toLocaleString('ar-EG')}</td>
-            <td class="message-content">${messagesHtml}</td>
-            <td><button class="danger" data-email="${user.email}">حذف</button></td>
-          `;
+      tr.innerHTML = `
+  <td>${user.name}</td>
+  <td>${user.email}</td>
+  <td>${user.phone}</td>
+  <td>${new Date(user.receivedAt).toLocaleString('ar-EG')}</td>
+  <td class="message-content">${messagesHtml}</td>
+  <td><button class="danger" data-email="${user.email}">حذف</button></td>
+`;
+
           usersTableBody.appendChild(tr);
         });
 
@@ -358,6 +344,7 @@
       }
     }
 
+    // باقي الدوال كما هي بدون تغيير (loadBookings, loadResults, loadMessages)
     // باقي الدوال (loadBookings, loadResults, loadMessages) بنفس الشكل السابق
     async function loadBookings() {
       try {
@@ -494,6 +481,7 @@
       }
     }
 
+    // باقي الكود كما هو بدون تغيير
     uploadResultForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -559,7 +547,7 @@
           document.getElementById('emailInput').value = '';
           document.getElementById('messageInput').value = '';
           loadMessages();
-          loadUsers();
+          loadUsers(); // نعيد تحميل المستخدمين لتحديث الرسائل
         } else {
           sendResponse.textContent = data.error || 'حدث خطأ أثناء إرسال الرسالة';
           sendResponse.className = 'response error';
