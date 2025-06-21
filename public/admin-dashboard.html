@@ -284,65 +284,59 @@
 
     themeToggle.addEventListener('click', toggleDarkMode);
 
-    // تحميل بيانات المستخدمين مع الرسائل
-    async function loadUsers() {
-      try {
-        const res = await fetch('/api/admin/messages');
-        if (!res.ok) throw new Error('خطأ في تحميل بيانات المستخدمين');
-        const users = await res.json();
 
-        usersTableBody.innerHTML = '';
-        users.forEach(user => {
-          const tr = document.createElement('tr');
-          
-          // عرض الرسائل
-          let messagesHtml = 'لا توجد رسائل';
-          if (user.messages && user.messages.length > 0) {
-            messagesHtml = user.messages.map(msg => 
-              `<div class="message-item">
-                ${msg.message}<br>
-                <small>${new Date(msg.sentAt).toLocaleString('ar-EG')}</small>
-              </div>`
-            ).join('');
-          }
-          
+async function loadUsers() {
+  try {
+    const res = await fetch('/api/admin/messages');
+    if (!res.ok) throw new Error('خطأ في تحميل بيانات الرسائل');
+    const messages = await res.json();
+
+    usersTableBody.innerHTML = '';
+    messages.forEach(msg => {
+      const tr = document.createElement('tr');
       tr.innerHTML = `
-  <td>${user.name}</td>
-  <td>${user.email}</td>
-  <td>${user.phone}</td>
-  <td>${new Date(user.receivedAt).toLocaleString('ar-EG')}</td>
-  <td class="message-content">${messagesHtml}</td>
-  <td><button class="danger" data-email="${user.email}">حذف</button></td>
-`;
+        <td>${msg.name || '-'}</td>
+        <td>${msg.email}</td>
+        <td>غير متوفر</td>
+        <td>${new Date(msg.sentAt).toLocaleString('ar-EG')}</td>
+        <td class="message-content">${msg.message}</td>
+        <td><button class="danger" data-email="${msg.email}">حذف</button></td>
+      `;
+      usersTableBody.appendChild(tr);
+    });
 
-          usersTableBody.appendChild(tr);
-        });
+    // إضافة حدث الحذف بعد إدراج كل الأزرار
+    usersTableBody.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const email = btn.getAttribute('data-email');
+        if (!confirm(`هل أنت متأكد من حذف بيانات المستخدم للبريد: ${email} ؟`)) return;
 
-        usersTableBody.querySelectorAll('button').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            const emailToDelete = btn.getAttribute('data-email');
-            if (!confirm(`هل أنت متأكد من حذف المستخدم: ${emailToDelete} ؟`)) return;
-
-            try {
-              const res = await fetch(`/api/admin/user/${encodeURIComponent(emailToDelete)}`, {
-                method: 'DELETE'
-              });
-              const data = await res.json();
-              if (res.ok) {
-                alert(data.message);
-                loadUsers();
-              } else {
-                alert(data.error || 'حدث خطأ أثناء الحذف');
-              }
-            } catch {
-              alert('تعذر الاتصال بالخادم');
-            }
+        try {
+          const res = await fetch(`/api/admin/message/${encodeURIComponent(email)}`, {
+            method: 'DELETE'
           });
-        });
-      } catch (error) {
-        usersTableBody.innerHTML = '<tr><td colspan="6">تعذر تحميل بيانات المستخدمين</td></tr>';
-      }
-    }
+          const data = await res.json();
+          if (res.ok) {
+            alert(data.message);
+            loadUsers();
+          } else {
+            alert(data.error || 'حدث خطأ أثناء الحذف');
+          }
+        } catch {
+          alert('تعذر الاتصال بالخادم');
+        }
+      });
+    });
+
+  } catch (error) {
+    usersTableBody.innerHTML = '<tr><td colspan="6">تعذر تحميل الرسائل</td></tr>';
+  }
+}
+
+
+// استدعاء الدالة عند تحميل الصفحة
+window.addEventListener('DOMContentLoaded', loadUsers);
+
 
     // باقي الدوال كما هي بدون تغيير (loadBookings, loadResults, loadMessages)
     // باقي الدوال (loadBookings, loadResults, loadMessages) بنفس الشكل السابق
