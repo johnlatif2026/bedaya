@@ -95,7 +95,7 @@ app.post('/api/message', async (req, res) => {
       `
     });
 
-    adminMessages.push({ email, message, name, sentAt: new Date() });
+adminMessages.push({ email, message, name, phone: req.body.phone || null, sentAt: new Date() });
 
     res.json({ message: 'تم إرسال الرسالة بنجاح' });
   } catch (err) {
