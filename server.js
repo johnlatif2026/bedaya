@@ -65,6 +65,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+
 // **التعديل الرئيسي: استقبال بيانات المستخدم (POST وليس GET)**
 app.post('/api/submit', (req, res) => {
   const { name, email, phone } = req.body;
@@ -233,6 +234,7 @@ app.delete('/api/admin/result/:phone', checkAuth, (req, res) => {
 // إرسال رسالة للعميل (من الادمن)
 app.post('/api/admin/message', checkAuth, async (req, res) => {
   const { email, message } = req.body;
+
   if (!email || !message?.trim()) {
     return res.status(400).json({ error: 'البريد الإلكتروني والرسالة مطلوبين' });
   }
@@ -245,9 +247,11 @@ app.post('/api/admin/message', checkAuth, async (req, res) => {
       html: `<p>${message}</p>`
     });
 
-    adminSentMessages.push({ email, message, sentAt: new Date() });
+    // تخزين الرسالة في نفس المصفوفة المستخدمة في الواجهة والإدارة
+    adminMessages.push({ email, message, sentAt: new Date() });
 
     res.json({ message: 'تم إرسال الرسالة بنجاح' });
+
   } catch (err) {
     console.error('خطأ في إرسال الإيميل:', err);
     res.status(500).json({ error: 'حدث خطأ أثناء إرسال الإيميل' });
