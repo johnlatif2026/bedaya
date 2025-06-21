@@ -11,13 +11,17 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+<<<<<<< HEAD
 // بيانات مخزنة مؤقتاً في الذاكرة
+=======
+// بيانات مخزنة مؤقتاً
+>>>>>>> 91d66f6 (تحديث)
 const usersData = [];
 const adminMessages = [];
 const bookingsData = [];
 const resultsData = [];
 
-// إعداد multer لرفع الملفات
+// إعداد multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = 'public/uploads/';
@@ -32,25 +36,21 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// Sessions
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: { secure: false }
 }));
-
-// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Middleware للتحقق من تسجيل دخول الادمن
+// حماية الراوتات
 function checkAuth(req, res, next) {
   if (req.session && req.session.isLoggedIn) {
     next();
@@ -59,7 +59,11 @@ function checkAuth(req, res, next) {
   }
 }
 
+<<<<<<< HEAD
 // إعداد nodemailer
+=======
+// Nodemailer
+>>>>>>> 91d66f6 (تحديث)
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
@@ -70,6 +74,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+<<<<<<< HEAD
 // استقبال بيانات المستخدم
 app.post('/api/submit', (req, res) => {
   const { name, email, phone } = req.body;
@@ -79,6 +84,9 @@ app.post('/api/submit', (req, res) => {
   usersData.push({ name, email, phone, receivedAt: new Date() });
   res.json({ message: 'تم استلام البيانات بنجاح' });
 });
+=======
+
+>>>>>>> 91d66f6 (تحديث)
 
 // استقبال بيانات الحجز
 app.post('/api/booking', (req, res) => {
@@ -87,7 +95,11 @@ app.post('/api/booking', (req, res) => {
     return res.status(400).json({ error: 'جميع الحقول مطلوبة' });
   }
   bookingsData.push({ name, phone, date, time, receivedAt: new Date() });
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> 91d66f6 (تحديث)
   if (process.env.ADMIN_EMAIL) {
     transporter.sendMail({
       from: `"Bedaya System" <${process.env.SMTP_USER}>`,
@@ -103,7 +115,7 @@ app.post('/api/booking', (req, res) => {
       `
     }).catch(console.error);
   }
-  
+
   res.json({ message: 'تم استلام الحجز بنجاح' });
 });
 
@@ -113,7 +125,7 @@ app.post('/api/upload-result', upload.single('resultFile'), (req, res) => {
   if (!phone || !req.file) {
     return res.status(400).json({ error: 'رقم الهاتف والملف مطلوبان' });
   }
-  
+
   const fileUrl = '/uploads/' + req.file.filename;
   resultsData.push({ phone, fileUrl, uploadedAt: new Date() });
   res.json({ message: 'تم رفع النتيجة بنجاح', fileUrl });
@@ -123,7 +135,6 @@ app.post('/api/upload-result', upload.single('resultFile'), (req, res) => {
 app.get('/api/results/:phone', (req, res) => {
   const phone = req.params.phone;
   const result = resultsData.find(r => r.phone === phone);
-  
   if (result) {
     res.json({ success: true, result });
   } else {
@@ -151,7 +162,10 @@ app.post('/api/admin/logout', checkAuth, (req, res) => {
 });
 
 // جلب بيانات المستخدمين
+<<<<<<< HEAD
 // جلب بيانات المستخدمين مع الرسائل
+=======
+>>>>>>> 91d66f6 (تحديث)
 app.get('/api/admin/users', checkAuth, (req, res) => {
   const usersWithMessages = usersData.map(user => {
     const userMessages = adminMessages.filter(msg => msg.email === user.email);
@@ -202,16 +216,21 @@ app.delete('/api/admin/result/:phone', checkAuth, (req, res) => {
   if (index === -1) {
     return res.status(404).json({ error: 'النتيجة غير موجودة' });
   }
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> 91d66f6 (تحديث)
   const filePath = path.join(__dirname, 'public', resultsData[index].fileUrl);
   fs.unlink(filePath, (err) => {
     if (err) console.error('Error deleting file:', err);
   });
-  
+
   resultsData.splice(index, 1);
   res.json({ message: `تم حذف النتيجة لرقم ${phone} بنجاح` });
 });
 
+<<<<<<< HEAD
 // إرسال رسالة
 app.post('/api/admin/message', checkAuth, async (req, res) => {
   const { email, message } = req.body;
@@ -240,6 +259,8 @@ app.post('/api/admin/message', checkAuth, async (req, res) => {
   }
 });
 
+=======
+>>>>>>> 91d66f6 (تحديث)
 // جلب الرسائل
 app.get('/api/admin/messages', checkAuth, (req, res) => {
   res.json(adminMessages);
@@ -254,14 +275,24 @@ app.delete('/api/admin/message/:index', checkAuth, (req, res) => {
   if (index < 0 || index >= adminMessages.length) {
     return res.status(404).json({ error: 'الرسالة غير موجودة' });
   }
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> 91d66f6 (تحديث)
   adminMessages.splice(index, 1);
   res.json({ message: 'تم حذف الرسالة بنجاح' });
 });
 
+<<<<<<< HEAD
 // Routes
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+=======
+// صفحة الادمن
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin. '));
+>>>>>>> 91d66f6 (تحديث)
 });
 
 // تشغيل السيرفر
