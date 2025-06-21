@@ -297,7 +297,7 @@ async function loadUsers() {
       tr.innerHTML = `
         <td>${msg.name || '-'}</td>
         <td>${msg.email}</td>
-        <td>غير متوفر</td>
+        <td>${msg.phone || 'غير متوفر'}</td>
         <td>${new Date(msg.sentAt).toLocaleString('ar-EG')}</td>
         <td class="message-content">${msg.message}</td>
         <td><button class="danger" data-email="${msg.email}">حذف</button></td>
