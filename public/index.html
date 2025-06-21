@@ -264,47 +264,48 @@
       localStorage.setItem('darkMode', isDark);
       themeIcon.textContent = isDark ? '☀️' : '🌙';
     });
-  document.getElementById('contactForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
+ document.getElementById('contactForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
 
-    const name = document.getElementById('cName').value.trim();
-    const email = document.getElementById('cEmail').value.trim();
-    const phone = document.getElementById('cPhone').value.trim();
-    const message = document.getElementById('cMessage').value.trim();
+  const name = document.getElementById('cName').value.trim();
+  const email = document.getElementById('cEmail').value.trim();
+  const phone = document.getElementById('cPhone').value.trim();
+  const message = document.getElementById('cMessage').value.trim();
 
-    if (!name || !email || !phone || !message) {
-      alert('من فضلك املا كل الحقول');
-      return;
-    }
+  if (!name || !email || !phone || !message) {
+    alert('من فضلك املا كل الحقول');
+    return;
+  }
 
-    try {
-      // الخطوة الأولى: حفظ بيانات المستخدم
-      const submitRes = await fetch('/api/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone })
-      });
+  try {
+    // الخطوة الأولى: حفظ بيانات المستخدم
+    const submitRes = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, phone })
+    });
 
-      const submitData = await submitRes.json();
-      console.log('Submit Response:', submitData);
+    const submitData = await submitRes.json();
+    console.log('Submit Response:', submitData);
 
-      // الخطوة الثانية: إرسال الرسالة
-      const msgRes = await fetch('/api/message', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, message })
-      });
+    // الخطوة الثانية: إرسال الرسالة
+    const msgRes = await fetch('/api/message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, message, phone }) // ← ✅ تمت الإضافة
+    });
 
-      const msgData = await msgRes.json();
-      alert(msgData.message || 'تم الإرسال بنجاح');
+    const msgData = await msgRes.json();
+    alert(msgData.message || 'تم الإرسال بنجاح');
 
-      // تفريغ النموذج بعد الإرسال
-      document.getElementById('contactForm').reset();
-    } catch (error) {
-      console.error('Error:', error);
-      alert('حدث خطأ أثناء الإرسال. حاول مرة أخرى.');
-    }
-  });
+    // تفريغ النموذج بعد الإرسال
+    document.getElementById('contactForm').reset();
+  } catch (error) {
+    console.error('Error:', error);
+    alert('حدث خطأ أثناء الإرسال. حاول مرة أخرى.');
+  }
+});
+
 </script>
 
 </body>
