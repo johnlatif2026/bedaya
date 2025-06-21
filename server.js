@@ -256,14 +256,12 @@ app.get('/api/admin/messages', checkAuth, (req, res) => {
 });
 
 // حذف رسالة
-app.delete('/api/admin/message/:index', checkAuth, (req, res) => {
-  const index = parseInt(req.params.index);
-  if (isNaN(index) || index < 0 || index >= adminMessages.length) {
-    return res.status(400).json({ error: 'معرف الرسالة غير صالح' });
-  }
-  adminMessages.splice(index, 1);
+app.delete('/api/admin/message/:email', (req, res) => {
+  const email = req.params.email;
+  // تنفيذ الحذف من قاعدة البيانات ثم:
   res.json({ message: 'تم حذف الرسالة بنجاح' });
 });
+
 
 // صفحة الادمن
 app.get('/admin', (req, res) => {
