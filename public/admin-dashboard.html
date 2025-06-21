@@ -287,7 +287,7 @@
     // تحميل بيانات المستخدمين مع الرسائل
     async function loadUsers() {
       try {
-        const res = await fetch('/api/admin/message');
+        const res = await fetch('/api/admin/messages');
         if (!res.ok) throw new Error('خطأ في تحميل بيانات المستخدمين');
         const users = await res.json();
 
