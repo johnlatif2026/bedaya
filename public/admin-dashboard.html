@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>لوحة تحكم الادمن</title>
+  <style>
+    :root {
+      --bg-color: #f0f0f0;
+      --text-color: #333;
+      --card-bg: white;
+      --card-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      --th-bg: #007bff;
+      --th-color: white;
+      --border-color: #ccc;
+      --button-bg: #007bff;
+      --button-hover: #0056b3;
+      --danger-bg: #dc3545;
+      --danger-hover: #c82333;
+      --success-bg: #28a745;
+      --success-hover: #218838;
+      --warning-bg: #ffc107;
+      --warning-hover: #e0a800;
+      --sales-bg: #6f42c1;
+      --sales-hover: #5a32a3;
+    }
+
+    .dark-mode {
+      --bg-color: #1a1a1a;
+      --text-color: #f0f0f0;
+      --card-bg: #2d2d2d;
+      --card-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      --th-bg: #0056b3;
+      --border-color: #444;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      direction: rtl;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    button {
+      background-color: var(--button-bg);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9em;
+      margin: 3px;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background-color: var(--button-hover);
+    }
+    button.danger {
+      background-color: var(--danger-bg);
+    }
+    button.danger:hover {
+      background-color: var(--danger-hover);
+    }
+    button.success {
+      background-color: var(--success-bg);
+    }
+    button.success:hover {
+      background-color: var(--success-hover);
+    }
+    button.warning {
+      background-color: var(--warning-bg);
+      color: #212529;
+    }
+    button.warning:hover {
+      background-color: var(--warning-hover);
+      color: #212529;
+    }
+    button.sales {
+      background-color: var(--sales-bg);
+    }
+    button.sales:hover {
+      background-color: var(--sales-hover);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: var(--card-bg);
+    }
+    th, td {
+      border: 1px solid var(--border-color);
+      padding: 8px 12px;
+      text-align: center;
+    }
+    th {
+      background-color: var(--th-bg);
+      color: var(--th-color);
+    }
+    .section {
+      margin-top: 40px;
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: var(--card-shadow);
+    }
+    textarea {
+      width: 100%;
+      height: 80px;
+      resize: vertical;
+      background: var(--card-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+    }
+    input[type="email"],
+    input[type="text"],
+    input[type="tel"],
+    input[type="file"],
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background: var(--card-bg);
+      color: var(--text-color);
+    }
+    .response {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .success {
+      color: #28a745;
+    }
+    .error {
+      color: #dc3545;
+    }
+    .upload-area {
+      border: 2px dashed var(--button-bg);
+      padding: 20px;
+      text-align: center;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+    .message-content {
+      max-width: 300px;
+      word-wrap: break-word;
+      text-align: right;
+      white-space: pre-wrap;
+    }
+    .message-item {
+      margin-bottom: 5px;
+      padding: 5px;
+      background: rgba(0,0,0,0.1);
+      border-radius: 3px;
+    }
+    .dark-mode .message-item {
+      background: rgba(255,255,255,0.1);
+    }
+    .theme-toggle {
+      position: fixed;
+      left: 20px;
+      top: 20px;
+      z-index: 1000;
+    }
+    .total-sales {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin: 15px 0;
+      padding: 10px;
+      background: rgba(0,123,255,0.1);
+      border-radius: 5px;
+      text-align: center;
+    }
+    .dark-mode .total-sales {
+      background: rgba(0,123,255,0.2);
+    }
+    .edit-form {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(0,0,0,0.05);
+      border-radius: 5px;
+    }
+    .dark-mode .edit-form {
+      background: rgba(255,255,255,0.05);
+    }
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+  /* إضافة مؤشر تحميل */
+  body.loading::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+  }
+  body.loading::before {
+    content: "جاري التحميل...";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 10000;
+  }
+  </style>
+</head>
+<body>
+  <button id="themeToggle" class="theme-toggle">الوضع الداكن</button>
+  <h1>لوحة تحكم الادمن</h1>
+
+  <button id="logoutBtn">تسجيل خروج</button>
+
+  <!-- قسم المبيعات -->
+  <div class="section">
+    <h2>نظام المبيعات</h2>
+    
+    <div class="total-sales">
+      إجمالي المبيعات اليوم: <span id="todayTotal">0</span> جنيه
+    </div>
+    
+    <form id="salesForm">
+      <label for="customerName">اسم العميل:</label>
+      <input type="text" id="customerName" placeholder="اسم العميل" required />
+      
+      <label for="saleAmount">مبلغ البيع (جنيه):</label>
+      <input type="number" id="saleAmount" placeholder="المبلغ بالجنيه" min="1" required />
+      
+      <button type="submit" class="sales">تسجيل عملية البيع</button>
+      <button type="button" id="viewSalesBtn" class="success">سجلات المبيعات</button>
+    </form>
+    <p id="salesResponse" class="response"></p>
+    
+    <table id="salesTable" style="display: none;">
+      <thead>
+        <tr>
+          <th>اسم العميل</th>
+          <th>المبلغ</th>
+          <th>وقت البيع</th>
+          <th>الإجراءات</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>الرسائل الواردة</h2>
+    <table id="usersTable">
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>البريد الإلكتروني</th>
+          <th>رقم التليفون</th>
+          <th>تاريخ الإرسال</th>
+          <th>الرسائل</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>الحجوزات الواردة</h2>
+    <table id="bookingsTable">
+      <thead>
+        <tr>
+          <th>الاسم</th>
+          <th>رقم التليفون</th>
+          <th>التاريخ</th>
+          <th>الوقت</th>
+          <th>تاريخ الحجز</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>رفع نتائج جديدة</h2>
+    <form id="uploadResultForm">
+      <label for="resultPhone">رقم هاتف العميل:</label>
+      <input type="tel" id="resultPhone" required />
+      
+      <div class="upload-area">
+        <p>اسحب وأسقط ملف النتيجة هنا أو</p>
+        <input type="file" id="resultFile" required />
+      </div>
+      
+      <button type="submit" class="success">رفع النتيجة</button>
+    </form>
+    <p id="uploadResponse" class="response"></p>
+  </div>
+
+  <div class="section">
+    <h2>النتائج المرفوعة</h2>
+    <table id="resultsTable">
+      <thead>
+        <tr>
+          <th>رقم التليفون</th>
+          <th>النتيجة</th>
+          <th>تاريخ الرفع</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>إرسال رسالة إلى مستخدم</h2>
+    <form id="messageForm">
+      <label for="emailInput">البريد الإلكتروني للمستخدم:</label>
+      <input type="email" id="emailInput" placeholder="example@domain.com" required />
+      
+      <label for="messageInput">نص الرسالة:</label>
+      <textarea id="messageInput" placeholder="اكتب رسالتك هنا..." required></textarea>
+      
+      <button type="submit">إرسال رسالة</button>
+    </form>
+    <p id="sendResponse" class="response"></p>
+  </div>
+
+  <div class="section">
+    <h2>الرسائل المرسلة</h2>
+    <table id="sentMessagesTable">
+      <thead>
+        <tr>
+          <th>البريد الإلكتروني</th>
+          <th>الرسالة</th>
+          <th>تاريخ الإرسال</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+<script>
+  // عناصر DOM
+  const usersTableBody = document.querySelector("#usersTable tbody");
+  const bookingsTableBody = document.querySelector("#bookingsTable tbody");
+  const resultsTableBody = document.querySelector("#resultsTable tbody");
+  const sentMessagesTableBody = document.querySelector("#sentMessagesTable tbody");
+  const salesTableBody = document.querySelector("#salesTable tbody");
+  const logoutBtn = document.getElementById('logoutBtn');
+  const messageForm = document.getElementById('messageForm');
+  const uploadResultForm = document.getElementById('uploadResultForm');
+  const salesForm = document.getElementById('salesForm');
+  const viewSalesBtn = document.getElementById('viewSalesBtn');
+  const sendResponse = document.getElementById('sendResponse');
+  const uploadResponse = document.getElementById('uploadResponse');
+  const salesResponse = document.getElementById('salesResponse');
+  const todayTotalSpan = document.getElementById('todayTotal');
+  const themeToggle = document.getElementById('themeToggle');
+  const salesTable = document.getElementById('salesTable');
+
+  // ========== تحسينات نظام التوكن والمصادقة ==========
+  async function checkTokenValidity() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      redirectToLogin();
+      return false;
+    }
+
+    try {
+      const res = await fetch('/api/admin/verify-token', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (!res.ok) {
+        throw new Error('توكن غير صالح');
+      }
+      return true;
+    } catch (error) {
+      console.error('Token verification failed:', error);
+      redirectToLogin();
+      return false;
+    }
+  }
+
+  function redirectToLogin() {
+    localStorage.removeItem('token');
+    window.location.href = '/admin-login.html';
+  }
+
+  function handleApiError(error, message = 'حدث خطأ أثناء الاتصال بالخادم') {
+    console.error('API Error:', error);
+    if (error.message.includes('401')) {
+      redirectToLogin();
+    }
+    return message;
+  }
+
+  // ========== إدارة الوضع الداكن/الفاتح ==========
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    themeToggle.textContent = isDark ? 'الوضع الفاتح' : 'الوضع الداكن';
+    localStorage.setItem('darkMode', isDark);
+  }
+
+  if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+    themeToggle.textContent = 'الوضع الفاتح';
+  }
+
+  themeToggle.addEventListener('click', toggleDarkMode);
+
+  // ========== نظام المبيعات ==========
+  async function loadSales() {
+    try {
+      const isValid = await checkTokenValidity();
+      if (!isValid) return;
+
+      const res = await fetch('/api/admin/sales/today', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      
+      if (!res.ok) throw new Error('خطأ في تحميل بيانات المبيعات');
+      
+      const { sales, todayTotal } = await res.json();
+      todayTotalSpan.textContent = todayTotal || '0';
+      salesTableBody.innerHTML = '';
+      
+      sales.forEach(sale => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${sale.customerName}</td>
+          <td>${sale.amount} جنيه</td>
+          <td>${new Date(sale.saleTime).toLocaleString('ar-EG')}</td>
+          <td class="action-buttons">
+            <button class="warning edit-sale" data-id="${sale.id}">تعديل</button>
+            <button class="danger delete-sale" data-id="${sale.id}">حذف</button>
+          </td>
+        `;
+        salesTableBody.appendChild(tr);
+        
+        const editForm = document.createElement('div');
+        editForm.className = 'edit-form';
+        editForm.style.display = 'none';
+        editForm.dataset.id = sale.id;
+        editForm.innerHTML = `
+          <input type="text" class="edit-name" value="${sale.customerName}" placeholder="اسم العميل">
+          <input type="number" class="edit-amount" value="${sale.amount}" placeholder="المبلغ">
+          <div class="edit-buttons">
+            <button class="success save-edit">حفظ</button>
+            <button class="danger cancel-edit">إلغاء</button>
+          </div>
+        `;
+        tr.insertAdjacentElement('afterend', editForm);
+      });
+      
+    } catch (error) {
+      salesResponse.textContent = handleApiError(error, 'تعذر تحميل بيانات المبيعات');
+      salesResponse.className = 'response error';
+    }
+  }
+
+  viewSalesBtn.addEventListener('click', () => {
+    salesTable.style.display = salesTable.style.display === 'none' ? 'table' : 'none';
+    viewSalesBtn.textContent = salesTable.style.display === 'none' ? 'سجلات المبيعات' : 'إخفاء السجلات';
+  });
+
+  salesForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const customerName = document.getElementById('customerName').value.trim();
+    const saleAmount = document.getElementById('saleAmount').value.trim();
+    
+    if (!customerName || !saleAmount) {
+      salesResponse.textContent = 'يرجى إدخال اسم العميل ومبلغ البيع';
+      salesResponse.className = 'response error';
+      return;
+    }
+    
+    try {
+      const isValid = await checkTokenValidity();
+      if (!isValid) return;
+
+      const res = await fetch('/api/admin/sales', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ customerName, amount: saleAmount })
+      });
+      
+      const data = await res.json();
+      if (res.ok) {
+        salesResponse.textContent = data.message;
+        salesResponse.className = 'response success';
+        salesForm.reset();
+        loadSales();
+      } else {
+        throw new Error(data.error || 'حدث خطأ أثناء تسجيل البيع');
+      }
+    } catch (error) {
+      salesResponse.textContent = handleApiError(error);
+      salesResponse.className = 'response error';
+    }
+  });
+
+  // ========== نظام المستخدمين والحجوزات ==========
+  async function loadUsers() {
+    try {
+      const isValid = await checkTokenValidity();
+      if (!isValid) return;
+
+      const res = await fetch('/api/admin/users', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      
+      if (!res.ok) throw new Error('خطأ في تحميل بيانات المستخدمين');
+      
+      const users = await res.json();
+      usersTableBody.innerHTML = '';
+      
+      users.forEach(user => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${user.name}</td>
+          <td>${user.email}</td>
+          <td>${user.phone}</td>
+          <td>${new Date(user.receivedAt).toLocaleString('ar-EG')}</td>
+          <td class="message-content">${user.messages}</td>
+          <td>
+            <button class="danger delete-user" data-email="${encodeURIComponent(user.email)}">حذف</button>
+          </td>
+        `;
+        usersTableBody.appendChild(tr);
+      });
+    } catch (error) {
+      handleApiError(error);
+    }
+  }
+
+  async function loadBookings() {
+    try {
+      const isValid = await checkTokenValidity();
+      if (!isValid) return;
+
+      const res = await fetch('/api/admin/bookings', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      
+      if (!res.ok) throw new Error('خطأ في تحميل بيانات الحجوزات');
+      
+      const bookings = await res.json();
+      bookingsTableBody.innerHTML = '';
+      
+      bookings.forEach(booking => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${booking.name}</td>
+          <td>${booking.phone}</td>
+          <td>${booking.date}</td>
+          <td>${booking.time}</td>
+          <td>${new Date(booking.receivedAt).toLocaleString('ar-EG')}</td>
+          <td>
+            <button class="danger delete-booking" data-phone="${encodeURIComponent(booking.phone)}">حذف</button>
+          </td>
+        `;
+        bookingsTableBody.appendChild(tr);
+      });
+    } catch (error) {
+      handleApiError(error);
+    }
+  }
+
+  // ========== نظام النتائج والرسائل ==========
+  async function loadResults() {
+    try {
+      const isValid = await checkTokenValidity();
+      if (!isValid) return;
+
+      const res = await fetch('/api/admin/results', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      
+      if (!res.ok) throw new Error('خطأ في تحميل بيانات النتائج');
+      
+      const results = await res.json();
+      resultsTableBody.innerHTML = '';
+      
+      results.forEach(result => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${result.phone}</td>
+          <td><a href="${result.fileUrl}" target="_blank">عرض النتيجة</a></td>
+          <td>${new Date(result.uploadedAt).toLocaleString('ar-EG')}</td>
+          <td>
+            <button class="danger delete-result" data-phone="${encodeURIComponent(result.phone)}">حذف</button>
+          </td>
+        `;
+        resultsTableBody.appendChild(tr);
+      });
+    } catch (error) {
+      handleApiError(error);
+    }
+  }
+
+  async function loadMessages() {
+    try {
+      const isValid = await checkTokenValidity();
+      if (!isValid) return;
+
+      const res = await fetch('/api/admin/messages', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      
+      if (!res.ok) throw new Error('خطأ في تحميل الرسائل المرسلة');
+      
+      const messages = await res.json();
+      sentMessagesTableBody.innerHTML = '';
+      
+      messages.forEach((message, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${message.email}</td>
+          <td class="message-content">${message.message}</td>
+          <td>${new Date(message.sentAt).toLocaleString('ar-EG')}</td>
+          <td>
+            <button class="danger delete-message" data-index="${index}">حذف</button>
+          </td>
+        `;
+        sentMessagesTableBody.appendChild(tr);
+      });
+    } catch (error) {
+      handleApiError(error);
+    }
+  }
+
+  // ========== معالجة الأحداث ==========
+  document.addEventListener('click', async (e) => {
+    // أحداث التعديل والحذف للمبيعات
+    if (e.target.classList.contains('edit-sale')) {
+      const saleId = e.target.dataset.id;
+      document.querySelectorAll('.edit-form').forEach(form => form.style.display = 'none');
+      const editForm = document.querySelector(`.edit-form[data-id="${saleId}"]`);
+      if (editForm) editForm.style.display = 'block';
+    }
+    
+    if (e.target.classList.contains('save-edit')) {
+      const editForm = e.target.closest('.edit-form');
+      const saleId = editForm.dataset.id;
+      const newName = editForm.querySelector('.edit-name').value.trim();
+      const newAmount = editForm.querySelector('.edit-amount').value.trim();
+      
+      if (!newName || !newAmount) {
+        alert('يرجى إدخال اسم العميل والمبلغ');
+        return;
+      }
+      
+      try {
+        const isValid = await checkTokenValidity();
+        if (!isValid) return;
+
+        const res = await fetch(`/api/admin/sale/${saleId}`, {
+          method: 'PUT',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({ customerName: newName, amount: parseFloat(newAmount) })
+        });
+        
+        const data = await res.json();
+        if (res.ok) {
+          alert(data.message);
+          loadSales();
+        } else {
+          throw new Error(data.error || 'حدث خطأ أثناء التعديل');
+        }
+      } catch (error) {
+        alert(handleApiError(error));
+      }
+    }
+    
+    if (e.target.classList.contains('cancel-edit')) {
+      const editForm = e.target.closest('.edit-form');
+      editForm.style.display = 'none';
+    }
+    
+    // أحداث الحذف
+    const deleteActions = {
+      'delete-sale': { endpoint: '/api/admin/sale/', param: 'id', loader: loadSales },
+      'delete-user': { endpoint: '/api/admin/user/', param: 'email', loader: loadUsers },
+      'delete-booking': { endpoint: '/api/admin/booking/', param: 'phone', loader: loadBookings },
+      'delete-result': { endpoint: '/api/admin/result/', param: 'phone', loader: loadResults },
+      'delete-message': { endpoint: '/api/admin/message/', param: 'index', loader: loadMessages }
+    };
+
+    for (const [className, action] of Object.entries(deleteActions)) {
+      if (e.target.classList.contains(className)) {
+        if (!confirm('هل أنت متأكد من الحذف؟')) return;
+        
+        try {
+          const paramValue = e.target.getAttribute(`data-${action.param}`);
+          const isValid = await checkTokenValidity();
+          if (!isValid) return;
+
+          const res = await fetch(`${action.endpoint}${paramValue}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+          });
+          
+          if (res.ok) {
+            alert('تم الحذف بنجاح');
+            action.loader();
+          } else {
+            const error = await res.json();
+            throw new Error(error.error || 'حدث خطأ أثناء الحذف');
+          }
+        } catch (error) {
+          alert(handleApiError(error));
+        }
+      }
+    }
+  });
+
+  // ========== إرسال الرسائل ورفع النتائج ==========
+  messageForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('emailInput').value.trim();
+    const message = document.getElementById('messageInput').value.trim();
+    
+    if (!email || !message) {
+      sendResponse.textContent = 'يرجى إدخال البريد الإلكتروني ونص الرسالة';
+      sendResponse.className = 'response error';
+      return;
+    }
+    
+    try {
+      const isValid = await checkTokenValidity();
+      if (!isValid) return;
+
+      const res = await fetch('/api/admin/message', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ email, message })
+      });
+      
+      const data = await res.json();
+      if (res.ok) {
+        sendResponse.textContent = data.message;
+        sendResponse.className = 'response success';
+        messageForm.reset();
+        loadMessages();
+      } else {
+        throw new Error(data.error || 'حدث خطأ أثناء إرسال الرسالة');
+      }
+    } catch (error) {
+      sendResponse.textContent = handleApiError(error);
+      sendResponse.className = 'response error';
+    }
+  });
+
+  uploadResultForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const phone = document.getElementById('resultPhone').value.trim();
+    const fileInput = document.getElementById('resultFile');
+    
+    if (!phone || !fileInput.files[0]) {
+      uploadResponse.textContent = 'يرجى إدخال رقم الهاتف واختيار ملف';
+      uploadResponse.className = 'response error';
+      return;
+    }
+    
+    try {
+      const isValid = await checkTokenValidity();
+      if (!isValid) return;
+
+      const formData = new FormData();
+      formData.append('phone', phone);
+      formData.append('resultFile', fileInput.files[0]);
+      
+      const res = await fetch('/api/upload-result', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+        body: formData
+      });
+      
+      const data = await res.json();
+      if (res.ok) {
+        uploadResponse.textContent = data.message;
+        uploadResponse.className = 'response success';
+        uploadResultForm.reset();
+        loadResults();
+      } else {
+        throw new Error(data.error || 'حدث خطأ أثناء رفع النتيجة');
+      }
+    } catch (error) {
+      uploadResponse.textContent = handleApiError(error);
+      uploadResponse.className = 'response error';
+    }
+  });
+
+  // ========== تسجيل الخروج ==========
+  logoutBtn.addEventListener('click', async () => {
+    if (!confirm('هل أنت متأكد من تسجيل الخروج؟')) return;
+    
+    try {
+      const res = await fetch('/api/admin/logout', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      
+      if (res.ok) {
+        localStorage.removeItem('token');
+        window.location.href = '/admin-login.html';
+      } else {
+        const error = await res.json();
+        throw new Error(error.error || 'حدث خطأ أثناء تسجيل الخروج');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      alert(handleApiError(error));
+      localStorage.removeItem('token');
+      window.location.href = '/admin-login.html';
+    }
+  });
+
+  // ========== تحميل البيانات الأولية ==========
+  document.addEventListener('DOMContentLoaded', async () => {
+    const isValid = await checkTokenValidity();
+    if (!isValid) return;
+
+    // عرض مؤشر تحميل
+    document.body.classList.add('loading');
+    
+    try {
+      await Promise.all([
+        loadUsers(),
+        loadBookings(),
+        loadResults(),
+        loadMessages(),
+        loadSales()
+      ]);
+    } catch (error) {
+      console.error('Initial load error:', error);
+    } finally {
+      document.body.classList.remove('loading');
+    }
+  });
+</script>
+</body>
+</html>

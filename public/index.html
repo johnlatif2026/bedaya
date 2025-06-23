@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bedaya</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+  <style>
+    .dark {
+      color-scheme: dark;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+  <!-- Header + Navbar -->
+  <header class="bg-gray-900 text-white py-4 fixed w-full top-0 left-0 shadow-lg z-10">
+    <div class="container mx-auto flex justify-between items-center px-6">
+      <h1 class="text-2xl font-bold">Bedaya</h1>
+      <nav>
+        <ul class="flex space-x-6">
+          <li><a href="#home" class="hover:text-indigo-400">الصفحة الرئيسية</a></li>
+          <li><a href="" class="hover:text-indigo-400"></a></li>
+          <li><a href="#booking" class="hover:text-indigo-400">الحجز</a></li>
+          <li><a href="#result" class="hover:text-indigo-400">الاستعلام عن النتيجة</a></li>
+          <li><a href="#contact" class="hover:text-indigo-400">المكان الخاص بنا و الاتصال بنا</a></li>
+          <li><a href="#معلومات_عنّا" class="hover:text-indigo-400">معلومات عنا</a></li>
+          <li><a href="#inquiries" class="hover:text-indigo-400">اتصل بنا</a></li>
+        </ul>
+      </nav>
+      <button id="themeToggle" class="ml-4 px-3 py-1 bg-indigo-600 rounded">
+        <span id="themeIcon">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="pt-20"></div> <!-- تباعد لتجنب تغطية المحتوى من الهيدر -->
+
+  <!-- الصفحة الرئيسية -->
+  <section id="home" class="h-screen bg-cover bg-center">
+    <div class="flex items-center justify-center h-full bg-black bg-opacity-50">
+      <div class="text-center text-white">
+        <h2 class="text-5xl font-bold mb-4">خدمة العملاء لمركز بداية</h2>
+        <p class="text-lg mb-6">نحن مركز بداية للتدخل المبكر والتأهيل.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="py-16"></div> <!-- مسافة بعد الصفحة الرئيسية -->
+
+  <!-- معلومات عنا -->
+  <section id="معلومات_عنّا" class="py-20 bg-white dark:bg-gray-800">
+    <div class="container mx-auto text-center px-6">
+      <h2 class="text-4xl font-bold mb-6">معلومات عنا</h2>
+      <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">مركز بداية للتدخل المبكر والتأهيل (للتخاطب-تنمية المهارات-تعديل السلوك-صعوبات التعلم-ارشاد نفسي-اختبارات نفسية و مقاييس).</p>
+    </div>
+  </section>
+
+  <div class="py-16"></div>
+
+<section id="contact" class="py-20 bg-white dark:bg-gray-800">
+        <div class="container mx-auto text-center px-6">
+            <h2 class="text-4xl font-bold mb-12">المكان الخاص بنا و الاتصال بنا</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white dark:bg-gray-800 p-6 shadow-lg rounded-lg">
+                      <h3 class="text-xl font-semibold mb-4 dark:text-white">العنوان</h3>
+                      <p class="text-gray-600 dark:text-gray-300">٢٩ شارع سلطان ابو العلا العروبة امبابة</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 shadow-lg rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 dark:text-white">وقت العمل</h3>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                    <p class="text-gray-700 dark:text-gray-300">السبت من 2 إلي 11</p>
+                    <p class="text-gray-700 dark:text-gray-300">الاحد من 6 إلي 11</p>
+                    <p class="text-gray-700 dark:text-gray-300"">الاتنين من 6 إلي 11</p>
+                    <p class="text-gray-700 dark:text-gray-300"">الثلاثاء من 6 إلي 11</p>
+                    <p class="text-gray-700 dark:text-gray-300"">الاربعاء من 6 إلي 11</p>
+                    <p class="text-gray-700 dark:text-gray-300"">الخميس من 6 إلي 11</p>
+                    <p class="text-gray-700 dark:text-gray-300">الجمعة من 2 إلي 11</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-6 shadow-lg rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4 dark:text-white">الاتصال بنا</h3>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                    <a href="https://wa.me/201278127159" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 flex items-center space-x-2">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>كلمنا واتساب</span></a>
+
+
+                    <br>
+                     <a href="tel:01278127159" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">كلمنا تليفون</a>
+
+                </div>
+                  </section>
+  <!-- الحجز -->
+  <section id="booking" class="py-20 bg-white dark:bg-gray-800">
+    <div class="container mx-auto px-6 max-w-lg">
+      <h2 class="text-4xl font-bold mb-6 text-center">احجز موعدك</h2>
+      <form id="bookingForm" class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md">
+        <label class="block mb-2 font-semibold">الاسم:</label>
+        <input type="text" id="bName" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
+        <label class="block mb-2 font-semibold">رقم التليفون:</label>
+        <input type="tel" id="bPhone" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
+        <label class="block mb-2 font-semibold">اختر التاريخ:</label>
+        <input type="date" id="bDate" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
+        <label class="block mb-2 font-semibold">اختر الوقت:</label>
+        <input type="time" id="bTime" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
+        <button type="submit" class="bg-indigo-500 hover:bg-indigo-700 text-white py-3 px-6 rounded w-full">احجز الآن</button>
+      </form>
+      <p id="bookingResponse" class="text-green-600 dark:text-green-400 font-bold mt-4"></p>
+    </div>
+  </section>
+
+  <div class="py-16"></div>
+
+  <!-- الاستعلام عن النتيجة -->
+  <section id="result" class="py-20 bg-gray-100 dark:bg-gray-700">
+    <div class="container mx-auto px-6 max-w-lg">
+      <h2 class="text-4xl font-bold mb-6 text-center">استعلم عن نتيجتك</h2>
+      <form id="inquiryForm" class="bg-white dark:bg-gray-600 p-6 rounded-lg shadow-md">
+        <label class="block mb-2 font-semibold">أدخل رقم التليفون:</label>
+        <input type="tel" id="iPhone" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-500 text-gray-800 dark:text-white" required>
+        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white py-3 px-6 rounded w-full">ابحث</button>
+      </form>
+      <div id="inquiryResponse" class="mt-4">
+        <!-- سيتم عرض النتيجة هنا -->
+      </div>
+    </div>
+  </section>
+
+  <div class="py-16"></div>
+
+   <!-- قسم التواصل -->
+  <section id="inquiries" class="py-20">
+    <div class="container mx-auto text-center px-6 max-w-lg">
+      <h2 class="text-4xl font-bold mb-6">لو في استفسار!</h2>
+      
+      <form id="contactForm" class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md">
+        <label for="cName" class="block mb-2 font-semibold">الاسم:</label>
+        <input type="text" id="cName" name="name" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
+
+        <label for="cEmail" class="block mb-2 font-semibold">البريد الإلكتروني:</label>
+        <input type="email" id="cEmail" name="email" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
+
+        <label for="cPhone" class="block mb-2 font-semibold">رقم التليفون:</label>
+        <input type="tel" id="cPhone" name="phone" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
+
+        <label for="cMessage" class="block mb-2 font-semibold">تفاصيل الرسالة:</label>
+        <textarea id="cMessage" name="message" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" rows="4" required></textarea>
+
+        <div id="contactResponse" class="mb-4 text-sm"></div>
+
+        <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white py-3 px-6 rounded w-full">إرسال</button>
+      </form>
+    </div>
+  </section>
+
+  <div class="py-16"></div>
+
+  <footer class="bg-gray-900 text-white py-6">
+    <div class="container mx-auto text-center">
+      <p>&copy; 2025 Bedaya. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // معالجة نموذج الحجز
+    const bookingForm = document.getElementById('bookingForm');
+    const bookingResponse = document.getElementById('bookingResponse');
+
+    bookingForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const bookingData = {
+        name: document.getElementById('bName').value.trim(),
+        phone: document.getElementById('bPhone').value.trim(),
+        date: document.getElementById('bDate').value,
+        time: document.getElementById('bTime').value
+      };
+
+      try {
+        const res = await fetch('/api/booking', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(bookingData)
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          bookingResponse.textContent = data.message;
+          bookingResponse.classList.remove('text-red-600');
+          bookingResponse.classList.add('text-green-600');
+          bookingForm.reset();
+        } else {
+          bookingResponse.textContent = data.error || 'حدث خطأ أثناء الحجز';
+          bookingResponse.classList.remove('text-green-600');
+          bookingResponse.classList.add('text-red-600');
+        }
+      } catch (error) {
+        bookingResponse.textContent = 'تعذر الاتصال بالخادم. حاول مرة أخرى.';
+        bookingResponse.classList.remove('text-green-600');
+        bookingResponse.classList.add('text-red-600');
+      }
+    });
+
+    // معالجة نموذج الاستعلام عن النتيجة
+    const inquiryForm = document.getElementById('inquiryForm');
+    const inquiryResponse = document.getElementById('inquiryResponse');
+
+    inquiryForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const phone = document.getElementById('iPhone').value.trim();
+
+      try {
+        const res = await fetch(`/api/results/${phone}`);
+        const data = await res.json();
+
+        if (data.success && data.results.length > 0) {
+  const result = data.results[0]; // ← خذ أول نتيجة
+
+  inquiryResponse.innerHTML = `
+    <div class="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-200 px-4 py-3 rounded">
+      <h3 class="font-bold">تم العثور على النتيجة</h3>
+      <p>رقم الهاتف: ${result.phone}</p>
+      <p class="mt-2">
+        <a href="${result.fileUrl}" class="text-blue-600 dark:text-blue-400 underline" target="_blank">
+          اضغط هنا لتحميل النتيجة
+        </a>
+      </p>
+      <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">
+        تم الرفع في: ${new Date(result.uploadedAt).toLocaleString('ar-EG')}
+      </p>
+    </div>
+  `;
+} else {
+  inquiryResponse.innerHTML = `
+    <div class="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded">
+      ${data.message || 'لا توجد نتائج لهذا الرقم'}
+    </div>
+  `;
+}
+
+      } catch (error) {
+        inquiryResponse.innerHTML = `
+          <div class="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded">
+            تعذر الاتصال بالخادم. حاول مرة أخرى.
+          </div>
+        `;
+      }
+    });
+
+    // تبديل الوضع الداكن/الفاتح
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    
+    // تحميل التفضيل المحفوظ
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.documentElement.classList.add('dark');
+      themeIcon.textContent = '☀️';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('darkMode', isDark);
+      themeIcon.textContent = isDark ? '☀️' : '🌙';
+    });
+ document.getElementById('contactForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById('cName').value.trim();
+  const email = document.getElementById('cEmail').value.trim();
+  const phone = document.getElementById('cPhone').value.trim();
+  const message = document.getElementById('cMessage').value.trim();
+
+  if (!name || !email || !phone || !message) {
+    alert('من فضلك املا كل الحقول');
+    return;
+  }
+
+  try {
+    // الخطوة الأولى: حفظ بيانات المستخدم
+    const submitRes = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, phone })
+    });
+
+    const submitData = await submitRes.json();
+    console.log('Submit Response:', submitData);
+
+    // الخطوة الثانية: إرسال الرسالة
+    const msgRes = await fetch('/api/message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, message, phone }) // ← ✅ تمت الإضافة
+    });
+
+    const msgData = await msgRes.json();
+    alert(msgData.message || 'تم الإرسال بنجاح');
+
+    // تفريغ النموذج بعد الإرسال
+    document.getElementById('contactForm').reset();
+  } catch (error) {
+    console.error('Error:', error);
+    alert('حدث خطأ أثناء الإرسال. حاول مرة أخرى.');
+  }
+});
+
+</script>
+
+</body>
+</html>
