@@ -336,6 +336,45 @@ app.delete('/api/admin/booking/:phone', checkAuth, (req, res) => {
   res.json({ message: `تم حذف الحجز لرقم ${phone} بنجاح` });
 });
 
+// تعديل نتيجة موجودة
+app.put('/api/admin/result/:phone', upload.single('resultFile'), checkAuth, (req, res) => {
+  const oldPhone = decodeURIComponent(req.params.phone);
+  const newPhone = req.body.phone;
+  const resultFile = req.file;
+  
+  if (!newPhone) {
+    return res.status(400).json({ error: 'رقم الهاتف مطلوب' });
+  }
+  
+  const resultIndex = resultsData.findIndex(r => r.phone === oldPhone);
+  if (resultIndex === -1) {
+    return res.status(404).json({ error: 'النتيجة غير موجودة' });
+  }
+  
+  // تحديث رقم الهاتف
+  resultsData[resultIndex].phone = newPhone;
+  
+  // إذا تم رفع ملف جديد
+  if (resultFile) {
+    // حذف الملف القديم إذا كان موجوداً
+    const oldFilePath = path.join(__dirname, 'public', resultsData[resultIndex].fileUrl);
+    fs.unlink(oldFilePath, (err) => {
+      if (err) console.error('فشل في حذف الملف القديم:', err);
+    });
+    
+    // تحديث رابط الملف الجديد
+    resultsData[resultIndex].fileUrl = '/uploads/' + resultFile.filename;
+  }
+  
+  // تحديث تاريخ التعديل
+  resultsData[resultIndex].updatedAt = new Date();
+  
+  res.json({ 
+    message: 'تم تحديث النتيجة بنجاح',
+    result: resultsData[resultIndex]
+  });
+});
+
 // حذف نتيجة
 app.delete('/api/admin/result/:phone', checkAuth, (req, res) => {
   const phone = decodeURIComponent(req.params.phone);
