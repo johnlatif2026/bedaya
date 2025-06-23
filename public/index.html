@@ -194,19 +194,29 @@
   <div class="py-16"></div>
 
   <!-- الاستعلام عن النتيجة -->
-  <section id="result" class="py-20 bg-gray-100 dark:bg-gray-700">
-    <div class="container mx-auto px-6 max-w-lg">
-      <h2 class="text-4xl font-bold mb-6 text-center">استعلم عن نتيجتك</h2>
-      <form id="inquiryForm" class="bg-white dark:bg-gray-600 p-6 rounded-lg shadow-md">
-        <label class="block mb-2 font-semibold">أدخل رقم التليفون:</label>
-        <input type="tel" id="iPhone" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-500 text-gray-800 dark:text-white" required>
-        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white py-3 px-6 rounded w-full">ابحث</button>
-      </form>
-      <div id="inquiryResponse" class="mt-4">
-        <!-- سيتم عرض النتيجة هنا -->
+<section id="result" class="py-20 bg-gray-100 dark:bg-gray-700">
+  <div class="container mx-auto px-6 max-w-lg">
+    <h2 class="text-4xl font-bold mb-6 text-center">استعلم عن نتيجتك</h2>
+    <form id="inquiryForm" class="bg-white dark:bg-gray-600 p-6 rounded-lg shadow-md">
+      <label class="block mb-2 font-semibold">أدخل رقم التليفون:</label>
+      <input type="tel" id="iPhone" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-500 text-gray-800 dark:text-white" required>
+      <button type="submit" class="bg-green-500 hover:bg-green-700 text-white py-3 px-6 rounded w-full">ابحث</button>
+    </form>
+    <div id="inquiryResponse" class="mt-4 bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md hidden">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold">نتيجتك</h3>
+        <button id="closeResult" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div id="resultContent" class="overflow-auto max-h-96">
+        <!-- سيتم عرض محتوى النتيجة هنا -->
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
   <div class="py-16"></div>
 
@@ -284,51 +294,70 @@
       }
     });
 
-    // معالجة نموذج الاستعلام عن النتيجة
-    const inquiryForm = document.getElementById('inquiryForm');
-    const inquiryResponse = document.getElementById('inquiryResponse');
+// معالجة نموذج الاستعلام عن النتيجة
+const inquiryForm = document.getElementById('inquiryForm');
+const inquiryResponse = document.getElementById('inquiryResponse');
+const resultContent = document.getElementById('resultContent');
+const closeResult = document.getElementById('closeResult');
 
-    inquiryForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const phone = document.getElementById('iPhone').value.trim();
+inquiryForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const phone = document.getElementById('iPhone').value.trim();
 
-      try {
-        const res = await fetch(`/api/results/${phone}`);
-        const data = await res.json();
+  try {
+    // عرض رسالة تحميل
+    inquiryResponse.classList.remove('hidden');
+    resultContent.innerHTML = '<p class="text-center py-4">جاري تحميل النتيجة...</p>';
 
-        if (data.success && data.results.length > 0) {
-  const result = data.results[0]; // ← خذ أول نتيجة
+    const res = await fetch(`/api/results/${phone}`);
+    const data = await res.json();
 
-  inquiryResponse.innerHTML = `
-    <div class="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-200 px-4 py-3 rounded">
-      <h3 class="font-bold">تم العثور على النتيجة</h3>
-      <p>رقم الهاتف: ${result.phone}</p>
-      <p class="mt-2">
-        <a href="${result.fileUrl}" class="text-blue-600 dark:text-blue-400 underline" target="_blank">
-          اضغط هنا لتحميل النتيجة
-        </a>
-      </p>
-      <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">
-        تم الرفع في: ${new Date(result.uploadedAt).toLocaleString('ar-EG')}
-      </p>
-    </div>
-  `;
-} else {
-  inquiryResponse.innerHTML = `
-    <div class="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded">
-      ${data.message || 'لا توجد نتائج لهذا الرقم'}
-    </div>
-  `;
-}
-
-      } catch (error) {
-        inquiryResponse.innerHTML = `
-          <div class="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded">
-            تعذر الاتصال بالخادم. حاول مرة أخرى.
+    if (data.success && data.results.length > 0) {
+      const result = data.results[0]; // خذ أول نتيجة
+      
+      // عرض النتيجة مباشرة في الصفحة
+      resultContent.innerHTML = `
+        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded">
+          <h4 class="font-bold mb-2">معلومات النتيجة:</h4>
+          <p class="mb-2"><span class="font-semibold">الاسم:</span> ${result.name || 'غير متوفر'}</p>
+          <p class="mb-2"><span class="font-semibold">رقم الهاتف:</span> ${result.phone}</p>
+          <p class="mb-2"><span class="font-semibold">التاريخ:</span> ${new Date(result.date).toLocaleDateString('ar-EG')}</p>
+          
+          <div class="mt-4">
+            <h4 class="font-bold mb-2">التفاصيل:</h4>
+            <div class="whitespace-pre-line">${result.details || 'لا توجد تفاصيل إضافية'}</div>
           </div>
-        `;
-      }
-    });
+          
+          <div class="mt-4">
+            <h4 class="font-bold mb-2">التوصيات:</h4>
+            <div class="whitespace-pre-line">${result.recommendations || 'لا توجد توصيات'}</div>
+          </div>
+          
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">
+            تم إصدار النتيجة في: ${new Date(result.uploadedAt).toLocaleString('ar-EG')}
+          </p>
+        </div>
+      `;
+    } else {
+      resultContent.innerHTML = `
+        <div class="text-center py-4 text-red-500 dark:text-red-400">
+          ${data.message || 'لا توجد نتائج لهذا الرقم'}
+        </div>
+      `;
+    }
+  } catch (error) {
+    resultContent.innerHTML = `
+      <div class="text-center py-4 text-red-500 dark:text-red-400">
+        تعذر الاتصال بالخادم. حاول مرة أخرى.
+      </div>
+    `;
+  }
+});
+
+// إغلاق عرض النتيجة
+closeResult.addEventListener('click', () => {
+  inquiryResponse.classList.add('hidden');
+});
 
  // تبديل الوضع الداكن/الفاتح
     const themeToggle = document.getElementById('themeToggle');
