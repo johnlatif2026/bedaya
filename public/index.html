@@ -10,57 +10,86 @@
       darkMode: 'class',
     }
   </script>
-  <style>
+<style>
     .dark {
       color-scheme: dark;
+    }
+    /* تخصيص لون روابط التنقل */
+    .nav-link {
+      color: #a5b4fc;
+      transition: all 0.3s ease;
+    }
+    .nav-link:hover {
+      color: #818cf8;
+      transform: translateY(-2px);
+    }
+    
+    /* تثبيت زرار الثيم */
+    #themeToggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    #themeToggle:hover {
+      transform: scale(1.1);
     }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
 
   <!-- Header + Navbar -->
-  <header class="bg-gray-900 text-white py-4 fixed w-full top-0 left-0 shadow-lg z-10">
-    <div class="container mx-auto flex justify-between items-center px-6">
-      <h1 class="text-2xl font-bold">Bedaya</h1>
+ <header class="bg-gray-900 text-white py-4 fixed w-full top-0 left-0 shadow-lg z-10">
+  <div class="container mx-auto flex justify-between items-center px-6">
+    <a href="#home" class="text-2xl font-bold cursor-pointer hover:text-indigo-400 transition-colors">Bedaya</a>
       <nav>
         <ul class="flex space-x-6">
-          <li><a href="#home" class="hover:text-indigo-400">الصفحة الرئيسية</a></li>
-          <li><a href="" class="hover:text-indigo-400"></a></li>
-          <li><a href="#booking" class="hover:text-indigo-400">الحجز</a></li>
-          <li><a href="#result" class="hover:text-indigo-400">الاستعلام عن النتيجة</a></li>
-          <li><a href="#contact" class="hover:text-indigo-400">المكان الخاص بنا و الاتصال بنا</a></li>
-          <li><a href="#معلومات_عنّا" class="hover:text-indigo-400">معلومات عنا</a></li>
-          <li><a href="#inquiries" class="hover:text-indigo-400">اتصل بنا</a></li>
+          <li><a href="#home" class="nav-link">الصفحة الرئيسية</a></li>
+          <li><a href="" class="nav-link"></a></li>
+          <li><a href="#booking" class="nav-link">الحجز</a></li>
+          <li><a href="#result" class="nav-link">الاستعلام عن النتيجة</a></li>
+          <li><a href="#contact" class="nav-link">المكان الخاص بنا و الاتصال بنا</a></li>
+          <li><a href="#معلومات_عنّا" class="nav-link">معلومات عنا</a></li>
+          <li><a href="#inquiries" class="nav-link">اتصل بنا</a></li>
         </ul>
       </nav>
-      <button id="themeToggle" class="ml-4 px-3 py-1 bg-indigo-600 rounded">
-        <span id="themeIcon">🌙</span>
-      </button>
+      <!-- تم نقل زر الثيم إلى أسفل الصفحة -->
+    </div>
+  </header>
+
+  <!-- زر تبديل الثيم الثابت -->
+  <button id="themeToggle" class="px-4 py-2 bg-indigo-600 rounded-full shadow-lg">
+    <span id="themeIcon" class="text-xl">🌙</span>
+  </button>
     </div>
   </header>
 
   <div class="pt-20"></div> <!-- تباعد لتجنب تغطية المحتوى من الهيدر -->
 
-  <!-- الصفحة الرئيسية -->
-  <section id="home" class="h-screen bg-cover bg-center">
-    <div class="flex items-center justify-center h-full bg-black bg-opacity-50">
-      <div class="text-center text-white">
-        <h2 class="text-5xl font-bold mb-4">خدمة العملاء لمركز بداية</h2>
-        <p class="text-lg mb-6">نحن مركز بداية للتدخل المبكر والتأهيل.</p>
-      </div>
+ <section id="home" class="h-screen bg-cover bg-center" style="background-image: url('https://i.postimg.cc/gJb6XHvP/469496238-122115851390585064-6363827339529413037-n-1.jpg')">
+  <div class="flex items-center justify-center h-full bg-black bg-opacity-50">
+    <div class="text-center text-white">
+      <h2 class="text-5xl font-bold mb-4">خدمة العملاء لمركز بداية</h2>
+      <p class="text-lg mb-6">نحن مركز بداية للتدخل المبكر والتأهيل.</p>
     </div>
-  </section>
+  </div>
+</section>
 
   <div class="py-16"></div> <!-- مسافة بعد الصفحة الرئيسية -->
 
   <!-- معلومات عنا -->
-  <section id="معلومات_عنّا" class="py-20 bg-white dark:bg-gray-800">
-    <div class="container mx-auto text-center px-6">
-      <h2 class="text-4xl font-bold mb-6">معلومات عنا</h2>
-      <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">مركز بداية للتدخل المبكر والتأهيل (للتخاطب-تنمية المهارات-تعديل السلوك-صعوبات التعلم-ارشاد نفسي-اختبارات نفسية و مقاييس).</p>
-    </div>
-  </section>
+ <section id="معلومات_عنّا" class="h-screen bg-cover bg-center" style="background-image: url('https://i.postimg.cc/DzXXwM4g/469496238-122115851390585064-6363827339529413037-n.jpg')">
+  <div class="flex items-center justify-center h-full bg-black bg-opacity-50">
+    <div class="text-center text-white">
+      <h2 class="text-5xl font-bold mb-4">معلومات عنا</h2>
+      <p class="text-lg mb-6">مركز بداية للتدخل المبكر والتأهيل (للتخاطب-تنمية المهارات-تعديل السلوك-صعوبات التعلم-ارشاد نفسي-اختبارات نفسية و مقاييس).
 
+.</p>
+    </div>
+  </div>
+</section>
   <div class="py-16"></div>
 
 <section id="contact" class="py-20 bg-white dark:bg-gray-800">
