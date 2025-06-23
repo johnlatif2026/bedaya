@@ -227,7 +227,10 @@
         </button>
       </div>
       <div id="resultViewer" class="mt-4 hidden">
-        <img id="resultImage" src="" alt="النتيجة" class="w-full h-auto rounded border border-gray-200 dark:border-gray-600">
+        <div id="loadingSpinner" class="flex justify-center items-center py-8">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        </div>
+        <img id="resultImage" src="" alt="النتيجة" class="w-full h-auto rounded border border-gray-200 dark:border-gray-600 hidden">
       </div>
     </div>
   </div>
