@@ -318,6 +318,7 @@ const inquiryResponse = document.getElementById('inquiryResponse');
 const resultOptions = document.getElementById('resultOptions');
 const resultViewer = document.getElementById('resultViewer');
 const resultImage = document.getElementById('resultImage');
+const loadingSpinner = document.getElementById('loadingSpinner');
 const downloadResult = document.getElementById('downloadResult');
 const viewResult = document.getElementById('viewResult');
 const closeResult = document.getElementById('closeResult');
@@ -331,8 +332,9 @@ inquiryForm.addEventListener('submit', async (e) => {
   try {
     inquiryResponse.classList.remove('hidden');
     resultOptions.classList.add('hidden');
-    resultViewer.classList.add('hidden');
-    resultViewer.innerHTML = '<p class="text-center py-4">جاري البحث عن النتيجة...</p>';
+    resultViewer.classList.remove('hidden');
+    loadingSpinner.classList.remove('hidden');
+    resultImage.classList.add('hidden');
 
     const res = await fetch(`/api/results/${phone}`);
     const data = await res.json();
@@ -349,8 +351,7 @@ inquiryForm.addEventListener('submit', async (e) => {
           ${data.message || 'لا توجد نتائج لهذا الرقم'}
         </div>
       `;
-      resultViewer.classList.remove('hidden');
-      resultOptions.classList.add('hidden');
+      loadingSpinner.classList.add('hidden');
     }
   } catch (error) {
     resultViewer.innerHTML = `
@@ -358,8 +359,7 @@ inquiryForm.addEventListener('submit', async (e) => {
         تعذر الاتصال بالخادم. حاول مرة أخرى.
       </div>
     `;
-    resultViewer.classList.remove('hidden');
-    resultOptions.classList.add('hidden');
+    loadingSpinner.classList.add('hidden');
   }
 });
 
@@ -369,7 +369,7 @@ downloadResult.addEventListener('click', () => {
     // إنشاء عنصر <a> خفي للتحميل
     const a = document.createElement('a');
     a.href = currentResultUrl;
-    a.download = 'نتيجة-بداية.pdf'; // يمكن تغيير اسم الملف حسب الحاجة
+    a.download = 'نتيجة-بداية.pdf';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -379,9 +379,27 @@ downloadResult.addEventListener('click', () => {
 // عرض النتيجة
 viewResult.addEventListener('click', () => {
   if (currentResultUrl) {
-    resultImage.src = currentResultUrl;
-    resultViewer.classList.remove('hidden');
     resultOptions.classList.add('hidden');
+    resultViewer.classList.remove('hidden');
+    loadingSpinner.classList.remove('hidden');
+    resultImage.classList.add('hidden');
+    
+    // إنشاء صورة مسبقًا لضمان التحميل السريع
+    const img = new Image();
+    img.src = currentResultUrl;
+    img.onload = () => {
+      resultImage.src = currentResultUrl;
+      loadingSpinner.classList.add('hidden');
+      resultImage.classList.remove('hidden');
+    };
+    img.onerror = () => {
+      loadingSpinner.classList.add('hidden');
+      resultViewer.innerHTML = `
+        <div class="text-center py-4 text-red-500 dark:text-red-400">
+          تعذر تحميل الصورة. يرجى المحاولة مرة أخرى أو تحميل النتيجة.
+        </div>
+      `;
+    };
   }
 });
 
