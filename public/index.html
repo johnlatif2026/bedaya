@@ -193,7 +193,7 @@
 
   <div class="py-16"></div>
 
-  <!-- الاستعلام عن النتيجة -->
+ <!-- الاستعلام عن النتيجة -->
 <section id="result" class="py-20 bg-gray-100 dark:bg-gray-700">
   <div class="container mx-auto px-6 max-w-lg">
     <h2 class="text-4xl font-bold mb-6 text-center">استعلم عن نتيجتك</h2>
@@ -204,15 +204,30 @@
     </form>
     <div id="inquiryResponse" class="mt-4 bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md hidden">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="text-xl font-semibold">نتيجتك</h3>
+        <h3 class="text-xl font-semibold">خيارات النتيجة</h3>
         <button id="closeResult" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
-      <div id="resultContent" class="overflow-auto max-h-96">
-        <!-- سيتم عرض محتوى النتيجة هنا -->
+      <div id="resultOptions" class="flex flex-col space-y-4">
+        <button id="downloadResult" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+          تحميل النتيجة
+        </button>
+        <button id="viewResult" class="bg-indigo-500 hover:bg-indigo-700 text-white py-2 px-4 rounded flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+          </svg>
+          عرض النتيجة
+        </button>
+      </div>
+      <div id="resultViewer" class="mt-4 hidden">
+        <img id="resultImage" src="" alt="النتيجة" class="w-full h-auto rounded border border-gray-200 dark:border-gray-600">
       </div>
     </div>
   </div>
@@ -297,66 +312,81 @@
 // معالجة نموذج الاستعلام عن النتيجة
 const inquiryForm = document.getElementById('inquiryForm');
 const inquiryResponse = document.getElementById('inquiryResponse');
-const resultContent = document.getElementById('resultContent');
+const resultOptions = document.getElementById('resultOptions');
+const resultViewer = document.getElementById('resultViewer');
+const resultImage = document.getElementById('resultImage');
+const downloadResult = document.getElementById('downloadResult');
+const viewResult = document.getElementById('viewResult');
 const closeResult = document.getElementById('closeResult');
+
+let currentResultUrl = '';
 
 inquiryForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const phone = document.getElementById('iPhone').value.trim();
 
   try {
-    // عرض رسالة تحميل
     inquiryResponse.classList.remove('hidden');
-    resultContent.innerHTML = '<p class="text-center py-4">جاري تحميل النتيجة...</p>';
+    resultOptions.classList.add('hidden');
+    resultViewer.classList.add('hidden');
+    resultViewer.innerHTML = '<p class="text-center py-4">جاري البحث عن النتيجة...</p>';
 
     const res = await fetch(`/api/results/${phone}`);
     const data = await res.json();
 
     if (data.success && data.results.length > 0) {
-      const result = data.results[0]; // خذ أول نتيجة
+      const result = data.results[0];
+      currentResultUrl = result.fileUrl;
       
-      // عرض النتيجة مباشرة في الصفحة
-      resultContent.innerHTML = `
-        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded">
-          <h4 class="font-bold mb-2">معلومات النتيجة:</h4>
-          <p class="mb-2"><span class="font-semibold">الاسم:</span> ${result.name || 'غير متوفر'}</p>
-          <p class="mb-2"><span class="font-semibold">رقم الهاتف:</span> ${result.phone}</p>
-          <p class="mb-2"><span class="font-semibold">التاريخ:</span> ${new Date(result.date).toLocaleDateString('ar-EG')}</p>
-          
-          <div class="mt-4">
-            <h4 class="font-bold mb-2">التفاصيل:</h4>
-            <div class="whitespace-pre-line">${result.details || 'لا توجد تفاصيل إضافية'}</div>
-          </div>
-          
-          <div class="mt-4">
-            <h4 class="font-bold mb-2">التوصيات:</h4>
-            <div class="whitespace-pre-line">${result.recommendations || 'لا توجد توصيات'}</div>
-          </div>
-          
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">
-            تم إصدار النتيجة في: ${new Date(result.uploadedAt).toLocaleString('ar-EG')}
-          </p>
-        </div>
-      `;
+      resultOptions.classList.remove('hidden');
+      resultViewer.classList.add('hidden');
     } else {
-      resultContent.innerHTML = `
+      resultViewer.innerHTML = `
         <div class="text-center py-4 text-red-500 dark:text-red-400">
           ${data.message || 'لا توجد نتائج لهذا الرقم'}
         </div>
       `;
+      resultViewer.classList.remove('hidden');
+      resultOptions.classList.add('hidden');
     }
   } catch (error) {
-    resultContent.innerHTML = `
+    resultViewer.innerHTML = `
       <div class="text-center py-4 text-red-500 dark:text-red-400">
         تعذر الاتصال بالخادم. حاول مرة أخرى.
       </div>
     `;
+    resultViewer.classList.remove('hidden');
+    resultOptions.classList.add('hidden');
+  }
+});
+
+// تحميل النتيجة
+downloadResult.addEventListener('click', () => {
+  if (currentResultUrl) {
+    // إنشاء عنصر <a> خفي للتحميل
+    const a = document.createElement('a');
+    a.href = currentResultUrl;
+    a.download = 'نتيجة-بداية.pdf'; // يمكن تغيير اسم الملف حسب الحاجة
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+});
+
+// عرض النتيجة
+viewResult.addEventListener('click', () => {
+  if (currentResultUrl) {
+    resultImage.src = currentResultUrl;
+    resultViewer.classList.remove('hidden');
+    resultOptions.classList.add('hidden');
   }
 });
 
 // إغلاق عرض النتيجة
 closeResult.addEventListener('click', () => {
   inquiryResponse.classList.add('hidden');
+  resultViewer.classList.add('hidden');
+  resultOptions.classList.remove('hidden');
 });
 
  // تبديل الوضع الداكن/الفاتح
