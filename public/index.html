@@ -10,7 +10,7 @@
       darkMode: 'class',
     }
   </script>
-<style>
+  <style>
     .dark {
       color-scheme: dark;
     }
@@ -18,6 +18,8 @@
     .nav-link {
       color: #a5b4fc;
       transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      display: block;
     }
     .nav-link:hover {
       color: #818cf8;
@@ -36,26 +38,75 @@
     #themeToggle:hover {
       transform: scale(1.1);
     }
+    
+    /* قائمة التنقل للجوال */
+    .mobile-menu {
+      display: none;
+    }
+    
+    @media (max-width: 768px) {
+      .desktop-menu {
+        display: none;
+      }
+      .mobile-menu-button {
+        display: block;
+      }
+      .mobile-menu.active {
+        display: block;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: #1f2937;
+        width: 100%;
+        padding: 1rem;
+        border-top: 1px solid #374151;
+      }
+      .nav-item {
+        margin-bottom: 0.5rem;
+      }
+      .nav-item:last-child {
+        margin-bottom: 0;
+      }
+    }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
 
   <!-- Header + Navbar -->
- <header class="bg-gray-900 text-white py-4 fixed w-full top-0 left-0 shadow-lg z-10">
-  <div class="container mx-auto flex justify-between items-center px-6">
-    <a href="#home" class="text-2xl font-bold cursor-pointer hover:text-indigo-400 transition-colors">Bedaya</a>
-      <nav>
+  <header class="bg-gray-900 text-white py-4 fixed w-full top-0 left-0 shadow-lg z-10">
+    <div class="container mx-auto flex justify-between items-center px-6">
+      <a href="#home" class="text-2xl font-bold cursor-pointer hover:text-indigo-400 transition-colors">Bedaya</a>
+      
+      <!-- زر القائمة للجوال - سيكون ظاهرًا فقط على الشاشات الصغيرة -->
+      <button class="mobile-menu-button p-2 focus:outline-none hidden">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+      
+      <!-- قائمة التنقل للكمبيوتر -->
+      <nav class="desktop-menu">
         <ul class="flex space-x-6">
           <li><a href="#home" class="nav-link">الصفحة الرئيسية</a></li>
-          <li><a href="" class="nav-link"></a></li>
           <li><a href="#booking" class="nav-link">الحجز</a></li>
           <li><a href="#result" class="nav-link">الاستعلام عن النتيجة</a></li>
           <li><a href="#contact" class="nav-link">المكان الخاص بنا و الاتصال بنا</a></li>
-          <li><a href="#معلومات_عنّا" class="nav-link">معلومات عنا</a></li>
+          <li class="border-t border-gray-700 pt-2 mt-2"><a href="#معلومات_عنّا" class="nav-link">معلومات عنا</a></li>
           <li><a href="#inquiries" class="nav-link">اتصل بنا</a></li>
         </ul>
       </nav>
-      <!-- تم نقل زر الثيم إلى أسفل الصفحة -->
+    </div>
+    
+    <!-- قائمة الجوال - ستظهر تحت الهيدر -->
+    <div class="mobile-menu">
+      <ul class="px-6 py-2">
+        <li class="nav-item"><a href="#home" class="nav-link">الصفحة الرئيسية</a></li>
+        <li class="nav-item"><a href="#booking" class="nav-link">الحجز</a></li>
+        <li class="nav-item"><a href="#result" class="nav-link">الاستعلام عن النتيجة</a></li>
+        <li class="nav-item"><a href="#contact" class="nav-link">المكان الخاص بنا و الاتصال بنا</a></li>
+        <li class="nav-item border-t border-gray-700 pt-2 mt-2"><a href="#معلومات_عنّا" class="nav-link">معلومات عنا</a></li>
+        <li class="nav-item"><a href="#inquiries" class="nav-link">اتصل بنا</a></li>
+      </ul>
     </div>
   </header>
 
@@ -282,11 +333,10 @@
       }
     });
 
-    // تبديل الوضع الداكن/الفاتح
+ // تبديل الوضع الداكن/الفاتح
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
     
-    // تحميل التفضيل المحفوظ
     if (localStorage.getItem('darkMode') === 'true') {
       document.documentElement.classList.add('dark');
       themeIcon.textContent = '☀️';
@@ -296,6 +346,36 @@
       const isDark = document.documentElement.classList.toggle('dark');
       localStorage.setItem('darkMode', isDark);
       themeIcon.textContent = isDark ? '☀️' : '🌙';
+    });
+    
+    // قائمة الجوال
+    const mobileMenuButton = document.querySelector('.mobile-menu-button');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    
+    // عرض/إخفاء زر القائمة حسب حجم الشاشة
+    function toggleMobileButton() {
+      if (window.innerWidth <= 768) {
+        mobileMenuButton.classList.remove('hidden');
+      } else {
+        mobileMenuButton.classList.add('hidden');
+        mobileMenu.classList.remove('active');
+      }
+    }
+    
+    // التحقق عند التحميل وعند تغيير حجم الشاشة
+    window.addEventListener('load', toggleMobileButton);
+    window.addEventListener('resize', toggleMobileButton);
+    
+    // فتح/إغلاق القائمة عند النقر على الزر
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('active');
+    });
+    
+    // إغلاق القائمة عند النقر على رابط
+    document.querySelectorAll('.mobile-menu .nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+      });
     });
  document.getElementById('contactForm').addEventListener('submit', async function (e) {
   e.preventDefault();
