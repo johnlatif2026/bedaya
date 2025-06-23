@@ -185,6 +185,7 @@
       padding: 10px;
       background: rgba(0,0,0,0.05);
       border-radius: 5px;
+      grid-column: 1 / -1;
     }
     .dark-mode .edit-form {
       background: rgba(255,255,255,0.05);
@@ -194,28 +195,37 @@
       justify-content: center;
       gap: 5px;
     }
-  /* إضافة مؤشر تحميل */
-  body.loading::after {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 9999;
-  }
-  body.loading::before {
-    content: "جاري التحميل...";
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 5px;
-    z-index: 10000;
-  }
+    .edit-form label {
+      display: block;
+      margin-top: 10px;
+    }
+    .edit-buttons {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    body.loading::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 9999;
+    }
+    body.loading::before {
+      content: "جاري التحميل...";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      z-index: 10000;
+    }
   </style>
 </head>
 <body>
@@ -315,7 +325,7 @@
           <th>رقم التليفون</th>
           <th>النتيجة</th>
           <th>تاريخ الرفع</th>
-          <th>حذف</th>
+          <th>الإجراءات</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -605,11 +615,33 @@
           <td>${result.phone}</td>
           <td><a href="${result.fileUrl}" target="_blank">عرض النتيجة</a></td>
           <td>${new Date(result.uploadedAt).toLocaleString('ar-EG')}</td>
-          <td>
+          <td class="action-buttons">
+            <button class="warning edit-result" data-phone="${encodeURIComponent(result.phone)}">تعديل</button>
             <button class="danger delete-result" data-phone="${encodeURIComponent(result.phone)}">حذف</button>
           </td>
         `;
         resultsTableBody.appendChild(tr);
+        
+        // إضافة نموذج التعديل
+        const editForm = document.createElement('div');
+        editForm.className = 'edit-form';
+        editForm.style.display = 'none';
+        editForm.dataset.phone = result.phone;
+        editForm.innerHTML = `
+          <label for="edit-phone-${result.phone}">رقم الهاتف:</label>
+          <input type="tel" id="edit-phone-${result.phone}" class="edit-phone" value="${result.phone}" required>
+          
+          <div class="upload-area">
+            <p>اختر ملف جديد أو اتركه فارغاً للحفاظ على الملف الحالي</p>
+            <input type="file" class="edit-file">
+          </div>
+          
+          <div class="edit-buttons">
+            <button class="success save-edit-result">حفظ التعديلات</button>
+            <button class="danger cancel-edit">إلغاء</button>
+          </div>
+        `;
+        tr.insertAdjacentElement('afterend', editForm);
       });
     } catch (error) {
       handleApiError(error);
@@ -696,6 +728,53 @@
     if (e.target.classList.contains('cancel-edit')) {
       const editForm = e.target.closest('.edit-form');
       editForm.style.display = 'none';
+    }
+    
+    // أحداث تعديل النتائج
+    if (e.target.classList.contains('edit-result')) {
+      const phone = e.target.dataset.phone;
+      document.querySelectorAll('.edit-form').forEach(form => form.style.display = 'none');
+      const editForm = document.querySelector(`.edit-form[data-phone="${phone}"]`);
+      if (editForm) editForm.style.display = 'block';
+    }
+    
+    if (e.target.classList.contains('save-edit-result')) {
+      const editForm = e.target.closest('.edit-form');
+      const oldPhone = editForm.dataset.phone;
+      const newPhone = editForm.querySelector('.edit-phone').value.trim();
+      const fileInput = editForm.querySelector('.edit-file');
+      
+      if (!newPhone) {
+        alert('يرجى إدخال رقم الهاتف');
+        return;
+      }
+      
+      try {
+        const isValid = await checkTokenValidity();
+        if (!isValid) return;
+
+        const formData = new FormData();
+        formData.append('phone', newPhone);
+        if (fileInput.files[0]) {
+          formData.append('resultFile', fileInput.files[0]);
+        }
+        
+        const res = await fetch(`/api/admin/result/${encodeURIComponent(oldPhone)}`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+          body: formData
+        });
+        
+        const data = await res.json();
+        if (res.ok) {
+          alert(data.message);
+          loadResults();
+        } else {
+          throw new Error(data.error || 'حدث خطأ أثناء التعديل');
+        }
+      } catch (error) {
+        alert(handleApiError(error));
+      }
     }
     
     // أحداث الحذف
