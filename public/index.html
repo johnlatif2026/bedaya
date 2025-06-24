@@ -512,7 +512,44 @@ closeResult.addEventListener('click', () => {
     alert('حدث خطأ أثناء الإرسال. حاول مرة أخرى.');
   }
 });
+// منع كليك يمين
+document.addEventListener("contextmenu", function(e) {
+  e.preventDefault();
+}, false);
 
+// منع مفاتيح F12 و Ctrl+Shift+I/U/J و Ctrl+U
+document.addEventListener("keydown", function(e) {
+  // F12
+  if (e.keyCode === 123) {
+    e.preventDefault();
+    return false;
+  }
+  // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
+  if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
+    e.preventDefault();
+    return false;
+  }
+  // Ctrl+U
+  if (e.ctrlKey && e.keyCode === 85) {
+    e.preventDefault();
+    return false;
+  }
+}, false);
+
+// كشف فتح أدوات المطور
+(function detectDevTools() {
+  const threshold = 160;
+  const check = () => {
+    const start = new Date();
+    debugger;
+    const end = new Date();
+    if (end - start > threshold) {
+      document.body.innerHTML = "<h1 style='text-align:center;color:red;'>تم الكشف عن أدوات المطور! 🚫</h1>";
+    }
+    setTimeout(check, 500);
+  };
+  check();
+})();
 </script>
 
 </body>
