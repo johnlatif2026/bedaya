@@ -2,555 +2,684 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bedaya</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-    }
-  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>مركز بداية | التدخل المبكر والتأهيل</title>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/PqYGJKTd/Logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    .dark {
-      color-scheme: dark;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    /* تخصيص لون روابط التنقل */
-    .nav-link {
-      color: #a5b4fc;
+
+    body {
+      font-family: 'Cairo', 'Tajawal', sans-serif;
+      background: #f8fafc;
+      color: #1f2937;
       transition: all 0.3s ease;
-      padding: 0.5rem 1rem;
+    }
+
+    body.dark-mode {
+      background: #0f172a;
+      color: #f1f5f9;
+    }
+
+    /* الهيدر */
+    .header {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      padding: 16px 32px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    body.dark-mode .header {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    }
+
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid white;
+    }
+
+    .logo h2 {
+      color: white;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    /* قائمة التنقل */
+    .nav-menu {
+      display: flex;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-menu li a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      font-weight: 500;
       display: block;
     }
-    .nav-link:hover {
-      color: #818cf8;
+
+    .nav-menu li a:hover {
+      background: rgba(255, 255, 255, 0.2);
       transform: translateY(-2px);
     }
-    
-    /* تثبيت زرار الثيم */
-    #themeToggle {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 100;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    /* زر القائمة للجوال */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    /* القسم الرئيسي (Hero) */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(139, 92, 246, 0.9)), url('https://i.postimg.cc/pT7cQcJy/464077830-122097874184585064-7225992681099549192-n.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 20px 80px;
+    }
+
+    .hero-content h1 {
+      font-size: 52px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-content p {
+      font-size: 20px;
+      color: white;
+      margin-bottom: 30px;
+      opacity: 0.95;
+    }
+
+    /* الأقسام العامة */
+    .section {
+      padding: 80px 20px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 50px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* بطاقات المعلومات */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .info-card {
+      background: white;
+      border-radius: 24px;
+      padding: 30px;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    body.dark-mode .info-card {
+      background: #1e293b;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .info-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .info-card i {
+      font-size: 48px;
+      color: #6366f1;
+      margin-bottom: 20px;
+    }
+
+    .info-card h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
+    /* النماذج */
+    .form-container {
+      max-width: 550px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 28px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+    }
+
+    body.dark-mode .form-container {
+      background: #1e293b;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      font-size: 16px;
+      font-family: 'Cairo', sans-serif;
+      transition: all 0.3s ease;
+      background: #f8fafc;
+    }
+
+    body.dark-mode .form-group input,
+    body.dark-mode .form-group textarea,
+    body.dark-mode .form-group select {
+      background: #334155;
+      border-color: #475569;
+      color: #f1f5f9;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
       transition: all 0.3s ease;
     }
-    #themeToggle:hover {
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-whatsapp {
+      background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+    }
+
+    .btn-phone {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    }
+
+    /* زرار الوضع الداكن */
+    .theme-toggle {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: white;
+      border: none;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      z-index: 999;
+    }
+
+    body.dark-mode .theme-toggle {
+      background: #1e293b;
+      color: #fbbf24;
+    }
+
+    .theme-toggle:hover {
       transform: scale(1.1);
     }
-    
-    /* قائمة التنقل للجوال */
-    .mobile-menu {
-      display: none;
+
+    /* الفوتر */
+    .footer {
+      background: #1e293b;
+      color: #cbd5e1;
+      text-align: center;
+      padding: 40px 20px;
+      margin-top: 60px;
     }
-    
+
+    body.dark-mode .footer {
+      background: #0f172a;
+    }
+
+    /* استجابة للجوال */
     @media (max-width: 768px) {
-      .desktop-menu {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-menu {
         display: none;
-      }
-      .mobile-menu-button {
-        display: block;
-      }
-      .mobile-menu.active {
-        display: block;
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background: #1f2937;
         width: 100%;
-        padding: 1rem;
-        border-top: 1px solid #374151;
+        flex-direction: column;
+        margin-top: 16px;
       }
-      .nav-item {
-        margin-bottom: 0.5rem;
+
+      .nav-menu.show {
+        display: flex;
       }
-      .nav-item:last-child {
-        margin-bottom: 0;
+
+      .hero-content h1 {
+        font-size: 32px;
       }
+
+      .hero-content p {
+        font-size: 16px;
+      }
+
+      .section {
+        padding: 50px 16px;
+      }
+
+      .section-title {
+        font-size: 28px;
+      }
+
+      .form-container {
+        padding: 28px;
+      }
+    }
+
+    /* تأثيرات إضافية */
+    .result-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 20px;
+      border-radius: 16px;
+      margin-top: 20px;
+    }
+
+    body.dark-mode .result-box {
+      background: #064e3b;
+      border-color: #059669;
+    }
+
+    .work-hours {
+      text-align: right;
+      direction: rtl;
+    }
+
+    .work-hours p {
+      padding: 6px 0;
+      border-bottom: 1px dashed #e2e8f0;
+    }
+
+    body.dark-mode .work-hours p {
+      border-bottom-color: #334155;
     }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+<body>
 
-  <!-- Header + Navbar -->
-  <header class="bg-gray-900 text-white py-4 fixed w-full top-0 left-0 shadow-lg z-10">
-    <div class="container mx-auto flex justify-between items-center px-6">
-      <a href="#home" class="text-2xl font-bold cursor-pointer hover:text-indigo-400 transition-colors">Bedaya</a>
+  <!-- الهيدر -->
+  <header class="header">
+    <div class="nav-container">
+      <div class="logo">
+        <img src="https://i.postimg.cc/PqYGJKTd/Logo.jpg" alt="مركز بداية">
+        <h2>مركز بداية</h2>
+      </div>
       
-      <!-- زر القائمة للجوال - سيكون ظاهرًا فقط على الشاشات الصغيرة -->
-      <button class="mobile-menu-button p-2 focus:outline-none hidden">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
+      <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
       </button>
-      
-      <!-- قائمة التنقل للكمبيوتر -->
-      <nav class="desktop-menu">
-        <ul class="flex space-x-6">
-          <li><a href="#home" class="nav-link">الصفحة الرئيسية</a></li>
-          <li><a href="#booking" class="nav-link">الحجز</a></li>
-          <li><a href="#result" class="nav-link">الاستعلام عن النتيجة</a></li>
-          <li><a href="#contact" class="nav-link">المكان الخاص بنا و الاتصال بنا</a></li>
-          <li class="border-t border-gray-700 pt-2 mt-2"><a href="#معلومات_عنّا" class="nav-link">معلومات عنا</a></li>
-          <li><a href="#inquiries" class="nav-link">اتصل بنا</a></li>
-        </ul>
-      </nav>
-    </div>
-    
-    <!-- قائمة الجوال - ستظهر تحت الهيدر -->
-    <div class="mobile-menu">
-      <ul class="px-6 py-2">
-        <li class="nav-item"><a href="#home" class="nav-link">الصفحة الرئيسية</a></li>
-        <li class="nav-item"><a href="#booking" class="nav-link">الحجز</a></li>
-        <li class="nav-item"><a href="#result" class="nav-link">الاستعلام عن النتيجة</a></li>
-        <li class="nav-item"><a href="#contact" class="nav-link">المكان الخاص بنا و الاتصال بنا</a></li>
-        <li class="nav-item border-t border-gray-700 pt-2 mt-2"><a href="#معلومات_عنّا" class="nav-link">معلومات عنا</a></li>
-        <li class="nav-item"><a href="#inquiries" class="nav-link">اتصل بنا</a></li>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#home">الرئيسية</a></li>
+        <li><a href="#about">معلومات عنا</a></li>
+        <li><a href="#booking">الحجز</a></li>
+        <li><a href="#result">النتائج</a></li>
+        <li><a href="#contact">اتصل بنا</a></li>
       </ul>
     </div>
   </header>
 
-  <!-- زر تبديل الثيم الثابت -->
-  <button id="themeToggle" class="px-4 py-2 bg-indigo-600 rounded-full shadow-lg">
-    <span id="themeIcon" class="text-xl">🌙</span>
+  <!-- زرار الوضع الداكن -->
+  <button class="theme-toggle" id="themeToggle">
+    🌙
   </button>
+
+  <!-- القسم الرئيسي -->
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <h1>مرحباً بكم في مركز بداية</h1>
+      <p>للتدخل المبكر والتأهيل - التخاطب، تنمية المهارات، تعديل السلوك، صعوبات التعلم، إرشاد نفسي</p>
     </div>
-  </header>
-
-  <div class="pt-20"></div> <!-- تباعد لتجنب تغطية المحتوى من الهيدر -->
-
- <section id="home" class="h-screen bg-cover bg-center" style="background-image: url('https://i.postimg.cc/pT7cQcJy/464077830-122097874184585064-7225992681099549192-n.jpg')">
-  <div class="flex items-center justify-center h-full bg-black bg-opacity-50">
-    <div class="text-center text-white">
-      <h2 class="text-5xl font-bold mb-4">خدمة العملاء لمركز بداية</h2>
-      <p class="text-lg mb-6">نحن مركز بداية للتدخل المبكر والتأهيل.</p>
-    </div>
-  </div>
-</section>
-
-  <div class="py-16"></div> <!-- مسافة بعد الصفحة الرئيسية -->
+  </section>
 
   <!-- معلومات عنا -->
-<section id="معلومات_عنّا" class="py-20 bg-white dark:bg-gray-800">
-    <div class="container mx-auto text-center px-6">
-      <h2 class="text-4xl font-bold mb-6">معلومات عنا</h2>
-      <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">مركز بداية للتدخل المبكر والتأهيل (للتخاطب-تنمية المهارات-تعديل السلوك-صعوبات التعلم-ارشاد نفسي-اختبارات نفسية و مقاييس).</p>
+  <section id="about" class="section">
+    <h2 class="section-title">معلومات عنا</h2>
+    <div class="cards-grid">
+      <div class="info-card">
+        <i class="fas fa-child"></i>
+        <h3>التدخل المبكر</h3>
+        <p>نقدم خدمات التدخل المبكر للأطفال لتطوير مهاراتهم منذ السنوات الأولى</p>
+      </div>
+      <div class="info-card">
+        <i class="fas fa-comments"></i>
+        <h3>التخاطب</h3>
+        <p>جلسات تخاطب متخصصة لتحسين النطق والتواصل</p>
+      </div>
+      <div class="info-card">
+        <i class="fas fa-brain"></i>
+        <h3>صعوبات التعلم</h3>
+        <p>برامج متخصصة لعلاج صعوبات التعلم وتنمية المهارات الأكاديمية</p>
+      </div>
     </div>
-</section>
+  </section>
 
-  <div class="py-16"></div>
-
-<section id="contact" class="py-20 bg-white dark:bg-gray-800">
-        <div class="container mx-auto text-center px-6">
-            <h2 class="text-4xl font-bold mb-12">المكان الخاص بنا و الاتصال بنا</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white dark:bg-gray-800 p-6 shadow-lg rounded-lg">
-                      <h3 class="text-xl font-semibold mb-4 dark:text-white">العنوان</h3>
-                      <p class="text-gray-600 dark:text-gray-300">٢٩ شارع سلطان ابو العلا العروبة امبابة</p>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-6 shadow-lg rounded-lg">
-                    <h3 class="text-xl font-semibold mb-4 dark:text-white">وقت العمل</h3>
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-                    <p class="text-gray-700 dark:text-gray-300">السبت من 2 إلي 11</p>
-                    <p class="text-gray-700 dark:text-gray-300">الاحد من 6 إلي 11</p>
-                    <p class="text-gray-700 dark:text-gray-300"">الاتنين من 6 إلي 11</p>
-                    <p class="text-gray-700 dark:text-gray-300"">الثلاثاء من 6 إلي 11</p>
-                    <p class="text-gray-700 dark:text-gray-300"">الاربعاء من 6 إلي 11</p>
-                    <p class="text-gray-700 dark:text-gray-300"">الخميس من 6 إلي 11</p>
-                    <p class="text-gray-700 dark:text-gray-300">الجمعة من 2 إلي 11</p>
-                    </div>
-                    <div class="bg-white dark:bg-gray-800 p-6 shadow-lg rounded-lg">
-                    <h3 class="text-xl font-semibold mb-4 dark:text-white">الاتصال بنا</h3>
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-                    <a href="https://wa.me/201278127159" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 flex items-center space-x-2">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>كلمنا واتساب</span></a>
-
-
-                    <br>
-                     <a href="tel:01278127159" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">كلمنا تليفون</a>
-
-                </div>
-                  </section>
   <!-- الحجز -->
-  <section id="booking" class="py-20 bg-white dark:bg-gray-800">
-    <div class="container mx-auto px-6 max-w-lg">
-      <h2 class="text-4xl font-bold mb-6 text-center">احجز موعدك</h2>
-      <form id="bookingForm" class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg shadow-md">
-        <label class="block mb-2 font-semibold">الاسم:</label>
-        <input type="text" id="bName" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
-        <label class="block mb-2 font-semibold">رقم التليفون:</label>
-        <input type="tel" id="bPhone" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
-        <label class="block mb-2 font-semibold">اختر التاريخ:</label>
-        <input type="date" id="bDate" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
-        <label class="block mb-2 font-semibold">اختر الوقت:</label>
-        <input type="time" id="bTime" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
-        <button type="submit" class="bg-indigo-500 hover:bg-indigo-700 text-white py-3 px-6 rounded w-full">احجز الآن</button>
-      </form>
-      <p id="bookingResponse" class="text-green-600 dark:text-green-400 font-bold mt-4"></p>
-    </div>
-  </section>
-
-  <div class="py-16"></div>
-
-<!-- الاستعلام عن النتيجة -->
-<section id="result" class="py-20 bg-gray-100 dark:bg-gray-700">
-  <div class="container mx-auto px-6 max-w-lg">
-    <h2 class="text-4xl font-bold mb-6 text-center">استعلم عن نتيجتك</h2>
-    <form id="inquiryForm" class="bg-white dark:bg-gray-600 p-6 rounded-lg shadow-md">
-      <label class="block mb-2 font-semibold">أدخل رقم التليفون:</label>
-      <input type="tel" id="iPhone" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-500 text-gray-800 dark:text-white" required>
-      <button type="submit" class="bg-green-500 hover:bg-green-700 text-white py-3 px-6 rounded w-full">ابحث</button>
-    </form>
-    <div id="inquiryResponse" class="mt-4 bg-white dark:bg-gray-700 p-4 rounded-lg shadow-md hidden">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-xl font-semibold">خيارات النتيجة</h3>
-        <button id="closeResult" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-      <div id="resultOptions" class="flex flex-col space-y-4">
-        <button id="downloadResult" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-          </svg>
-          تحميل النتيجة
-        </button>
-        <button id="viewResult" class="bg-indigo-500 hover:bg-indigo-700 text-white py-2 px-4 rounded flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-          </svg>
-          عرض النتيجة
-        </button>
-      </div>
-      <div id="resultViewer" class="mt-4 hidden">
-        <div id="loadingSpinner" class="flex justify-center items-center py-8">
-          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+  <section id="booking" class="section">
+    <h2 class="section-title">احجز موعدك</h2>
+    <div class="form-container">
+      <form id="bookingForm">
+        <div class="form-group">
+          <label>📝 الاسم</label>
+          <input type="text" id="bName" placeholder="أدخل اسمك كاملاً" required>
         </div>
-        <iframe id="resultFrame" src="" class="w-full h-96 rounded border border-gray-200 dark:border-gray-600 hidden"></iframe>
-        <img id="resultImage" src="" alt="النتيجة" class="w-full h-auto rounded border border-gray-200 dark:border-gray-600 hidden">
-      </div>
-    </div>
-  </div>
-</section>
-
-  <div class="py-16"></div>
-
-   <!-- قسم التواصل -->
-  <section id="inquiries" class="py-20">
-    <div class="container mx-auto text-center px-6 max-w-lg">
-      <h2 class="text-4xl font-bold mb-6">لو في استفسار!</h2>
-      
-      <form id="contactForm" class="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md">
-        <label for="cName" class="block mb-2 font-semibold">الاسم:</label>
-        <input type="text" id="cName" name="name" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
-
-        <label for="cEmail" class="block mb-2 font-semibold">البريد الإلكتروني:</label>
-        <input type="email" id="cEmail" name="email" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
-
-        <label for="cPhone" class="block mb-2 font-semibold">رقم التليفون:</label>
-        <input type="tel" id="cPhone" name="phone" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" required>
-
-        <label for="cMessage" class="block mb-2 font-semibold">تفاصيل الرسالة:</label>
-        <textarea id="cMessage" name="message" class="w-full mb-4 p-2 border rounded bg-white dark:bg-gray-600 text-gray-800 dark:text-white" rows="4" required></textarea>
-
-        <div id="contactResponse" class="mb-4 text-sm"></div>
-
-        <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white py-3 px-6 rounded w-full">إرسال</button>
+        
+        <div class="form-group">
+          <label>📱 رقم التليفون</label>
+          <input type="tel" id="bPhone" placeholder="مثال: 01234567890" required>
+        </div>
+        
+        <div class="form-group">
+          <label>📅 التاريخ</label>
+          <input type="date" id="bDate" required>
+        </div>
+        
+        <div class="form-group">
+          <label>⏰ الوقت</label>
+          <input type="time" id="bTime" required>
+        </div>
+        
+        <button type="submit" class="btn">احجز الآن</button>
       </form>
+      <div id="bookingResponse" style="margin-top: 16px; text-align: center;"></div>
     </div>
   </section>
 
-  <div class="py-16"></div>
-
-  <footer class="bg-gray-900 text-white py-6">
-    <div class="container mx-auto text-center">
-      <p>&copy; 2025 Bedaya. All Rights Reserved.</p>
+  <!-- الاستعلام عن النتيجة -->
+  <section id="result" class="section" style="background: #f1f5f9;">
+    <h2 class="section-title">استعلم عن نتيجتك</h2>
+    <div class="form-container">
+      <form id="inquiryForm">
+        <div class="form-group">
+          <label>🔍 أدخل رقم التليفون</label>
+          <input type="tel" id="iPhone" placeholder="أدخل رقم هاتفك" required>
+        </div>
+        <button type="submit" class="btn">ابحث</button>
+      </form>
+      <div id="inquiryResponse" style="margin-top: 20px;"></div>
     </div>
+  </section>
+
+  <!-- موقعنا واتصل بنا -->
+  <section id="contact" class="section">
+    <h2 class="section-title">موقعنا واتصل بنا</h2>
+    <div class="cards-grid">
+      <div class="info-card">
+        <i class="fas fa-map-marker-alt"></i>
+        <h3>العنوان</h3>
+        <p>٢٩ شارع سلطان ابو العلا<br>العروبة - امبابة</p>
+      </div>
+      
+      <div class="info-card">
+        <i class="fas fa-clock"></i>
+        <h3>مواعيد العمل</h3>
+        <div class="work-hours">
+          <p>السبت: 2م - 11م</p>
+          <p>الأحد - الخميس: 6م - 11م</p>
+          <p>الجمعة: 2م - 11م</p>
+        </div>
+      </div>
+      
+      <div class="info-card">
+        <i class="fas fa-phone-alt"></i>
+        <h3>تواصل معنا</h3>
+        <p style="margin-bottom: 12px;">
+          <a href="https://wa.me/201278127159" style="text-decoration: none;">
+            <button class="btn btn-whatsapp" style="margin-bottom: 10px;">
+              <i class="fab fa-whatsapp"></i> واتساب
+            </button>
+          </a>
+        </p>
+        <p>
+          <a href="tel:01278127159" style="text-decoration: none;">
+            <button class="btn btn-phone">
+              <i class="fas fa-phone"></i> اتصال
+            </button>
+          </a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- نموذج الاستفسار -->
+  <section class="section" style="background: #f1f5f9;">
+    <h2 class="section-title">لديك استفسار؟</h2>
+    <div class="form-container">
+      <form id="contactForm">
+        <div class="form-group">
+          <label>👤 الاسم</label>
+          <input type="text" id="cName" placeholder="أدخل اسمك" required>
+        </div>
+        
+        <div class="form-group">
+          <label>📧 البريد الإلكتروني</label>
+          <input type="email" id="cEmail" placeholder="example@domain.com" required>
+        </div>
+        
+        <div class="form-group">
+          <label>📱 رقم التليفون</label>
+          <input type="tel" id="cPhone" placeholder="أدخل رقم هاتفك" required>
+        </div>
+        
+        <div class="form-group">
+          <label>💬 رسالتك</label>
+          <textarea id="cMessage" rows="4" placeholder="اكتب استفسارك هنا..." required></textarea>
+        </div>
+        
+        <button type="submit" class="btn">إرسال</button>
+      </form>
+      <div id="contactResponse" style="margin-top: 16px; text-align: center;"></div>
+    </div>
+  </section>
+
+  <!-- الفوتر -->
+  <footer class="footer">
+    <p>© 2025 مركز بداية - جميع الحقوق محفوظة</p>
+    <p style="margin-top: 8px; font-size: 14px;">٢٩ شارع سلطان ابو العلا العروبة امبابة | 01278127159</p>
   </footer>
 
   <script>
-    // معالجة نموذج الحجز
+    // الوضع الداكن
+    const themeToggle = document.getElementById('themeToggle');
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark-mode');
+      themeToggle.innerHTML = '☀️';
+    }
+    
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      themeToggle.innerHTML = isDark ? '☀️' : '🌙';
+      localStorage.setItem('darkMode', isDark);
+    });
+
+    // قائمة الجوال
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('show');
+    });
+
+    // نموذج الحجز
     const bookingForm = document.getElementById('bookingForm');
     const bookingResponse = document.getElementById('bookingResponse');
-
+    
     bookingForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
-      const bookingData = {
+      const data = {
         name: document.getElementById('bName').value.trim(),
         phone: document.getElementById('bPhone').value.trim(),
         date: document.getElementById('bDate').value,
         time: document.getElementById('bTime').value
       };
-
+      
       try {
         const res = await fetch('/api/booking', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(bookingData)
+          body: JSON.stringify(data)
         });
-
-        const data = await res.json();
-
+        const result = await res.json();
         if (res.ok) {
-          bookingResponse.textContent = data.message;
-          bookingResponse.classList.remove('text-red-600');
-          bookingResponse.classList.add('text-green-600');
+          bookingResponse.innerHTML = `<div style="background: #22c55e; color: white; padding: 12px; border-radius: 12px;">✅ ${result.message}</div>`;
           bookingForm.reset();
         } else {
-          bookingResponse.textContent = data.error || 'حدث خطأ أثناء الحجز';
-          bookingResponse.classList.remove('text-green-600');
-          bookingResponse.classList.add('text-red-600');
+          bookingResponse.innerHTML = `<div style="background: #ef4444; color: white; padding: 12px; border-radius: 12px;">❌ ${result.error}</div>`;
         }
       } catch (error) {
-        bookingResponse.textContent = 'تعذر الاتصال بالخادم. حاول مرة أخرى.';
-        bookingResponse.classList.remove('text-green-600');
-        bookingResponse.classList.add('text-red-600');
+        bookingResponse.innerHTML = `<div style="background: #ef4444; color: white; padding: 12px; border-radius: 12px;">❌ حدث خطأ في الاتصال</div>`;
       }
     });
 
-// معالجة نموذج الاستعلام عن النتيجة
-const inquiryForm = document.getElementById('inquiryForm');
-const inquiryResponse = document.getElementById('inquiryResponse');
-const resultOptions = document.getElementById('resultOptions');
-const resultViewer = document.getElementById('resultViewer');
-const resultFrame = document.getElementById('resultFrame');
-const resultImage = document.getElementById('resultImage');
-const loadingSpinner = document.getElementById('loadingSpinner');
-const downloadResult = document.getElementById('downloadResult');
-const viewResult = document.getElementById('viewResult');
-const closeResult = document.getElementById('closeResult');
-
-let currentResult = null;
-
-inquiryForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const phone = document.getElementById('iPhone').value.trim();
-
-  try {
-    // إعادة تعيين الحالة
-    inquiryResponse.classList.remove('hidden');
-    resultOptions.classList.add('hidden');
-    resultViewer.classList.remove('hidden');
-    loadingSpinner.classList.remove('hidden');
-    resultFrame.classList.add('hidden');
-    resultImage.classList.add('hidden');
-
-    const res = await fetch(`/api/results/${phone}`);
-    const data = await res.json();
-
-    if (data.success && data.results.length > 0) {
-      currentResult = data.results[0];
-      resultOptions.classList.remove('hidden');
-      resultViewer.classList.add('hidden');
-    } else {
-      showError(data.message || 'لا توجد نتائج لهذا الرقم');
-    }
-  } catch (error) {
-    showError('تعذر الاتصال بالخادم. حاول مرة أخرى.');
-  }
-});
-
-// تحميل النتيجة
-downloadResult.addEventListener('click', () => {
-  if (currentResult && currentResult.fileUrl) {
-    const a = document.createElement('a');
-    a.href = currentResult.fileUrl;
-    a.download = 'نتيجة-بداية.pdf';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }
-});
-
-// عرض النتيجة
-viewResult.addEventListener('click', async () => {
-  if (!currentResult) return;
-
-  resultOptions.classList.add('hidden');
-  resultViewer.classList.remove('hidden');
-  loadingSpinner.classList.remove('hidden');
-  resultFrame.classList.add('hidden');
-  resultImage.classList.add('hidden');
-
-  try {
-    // محاولة عرض النتيجة كصورة أولاً
-    if (currentResult.fileUrl.match(/\.(jpg|jpeg|png|gif)$/i)) {
-      resultImage.src = currentResult.fileUrl;
-      resultImage.onload = () => {
-        loadingSpinner.classList.add('hidden');
-        resultImage.classList.remove('hidden');
-      };
-      resultImage.onerror = () => {
-        // إذا فشل تحميل الصورة، جرب عرضها كملف PDF
-        showAsPdf();
-      };
-    } else {
-      // إذا لم تكن صورة، عرض كملف PDF
-      showAsPdf();
-    }
-  } catch (error) {
-    showError('تعذر عرض النتيجة. يرجى تحميلها بدلاً من ذلك.');
-  }
-});
-
-function showAsPdf() {
-  if (currentResult && currentResult.fileUrl) {
-    resultFrame.src = `https://docs.google.com/viewer?url=${encodeURIComponent(currentResult.fileUrl)}&embedded=true`;
-    resultFrame.onload = () => {
-      loadingSpinner.classList.add('hidden');
-      resultFrame.classList.remove('hidden');
-    };
-    resultFrame.onerror = () => {
-      showError('تعذر عرض الملف. يرجى تحميله بدلاً من ذلك.');
-    };
-  }
-}
-
-function showError(message) {
-  resultViewer.innerHTML = `
-    <div class="text-center py-4 text-red-500 dark:text-red-400">
-      ${message}
-    </div>
-  `;
-  loadingSpinner.classList.add('hidden');
-}
-
-// إغلاق عرض النتيجة
-closeResult.addEventListener('click', () => {
-  inquiryResponse.classList.add('hidden');
-  resultViewer.classList.add('hidden');
-  resultOptions.classList.remove('hidden');
-});
-
- // تبديل الوضع الداكن/الفاتح
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
+    // نموذج الاستعلام عن النتيجة
+    const inquiryForm = document.getElementById('inquiryForm');
+    const inquiryResponse = document.getElementById('inquiryResponse');
     
-    if (localStorage.getItem('darkMode') === 'true') {
-      document.documentElement.classList.add('dark');
-      themeIcon.textContent = '☀️';
-    }
-
-    themeToggle.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.toggle('dark');
-      localStorage.setItem('darkMode', isDark);
-      themeIcon.textContent = isDark ? '☀️' : '🌙';
-    });
-    
-    // قائمة الجوال
-    const mobileMenuButton = document.querySelector('.mobile-menu-button');
-    const mobileMenu = document.querySelector('.mobile-menu');
-    
-    // عرض/إخفاء زر القائمة حسب حجم الشاشة
-    function toggleMobileButton() {
-      if (window.innerWidth <= 768) {
-        mobileMenuButton.classList.remove('hidden');
-      } else {
-        mobileMenuButton.classList.add('hidden');
-        mobileMenu.classList.remove('active');
+    inquiryForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const phone = document.getElementById('iPhone').value.trim();
+      
+      try {
+        const res = await fetch(`/api/results/${phone}`);
+        const data = await res.json();
+        
+        if (data.success && data.results.length > 0) {
+          const result = data.results[0];
+          inquiryResponse.innerHTML = `
+            <div class="result-box">
+              <h3 style="color: #22c55e; margin-bottom: 12px;">✅ تم العثور على النتيجة</h3>
+              <p><strong>رقم الهاتف:</strong> ${result.phone}</p>
+              <p style="margin-top: 12px;">
+                <a href="${result.fileUrl}" target="_blank" style="display: inline-block; background: #6366f1; color: white; padding: 10px 20px; border-radius: 12px; text-decoration: none;">
+                  📥 تحميل النتيجة
+                </a>
+              </p>
+            </div>
+          `;
+        } else {
+          inquiryResponse.innerHTML = `<div style="background: #fef2f2; color: #dc2626; padding: 16px; border-radius: 12px; text-align: center;">❌ ${data.message || 'لا توجد نتائج'}</div>`;
+        }
+      } catch (error) {
+        inquiryResponse.innerHTML = `<div style="background: #fef2f2; color: #dc2626; padding: 16px; border-radius: 12px;">❌ حدث خطأ في الاتصال بالخادم</div>`;
       }
-    }
+    });
+
+    // نموذج التواصل
+    const contactForm = document.getElementById('contactForm');
+    const contactResponse = document.getElementById('contactResponse');
     
-    // التحقق عند التحميل وعند تغيير حجم الشاشة
-    window.addEventListener('load', toggleMobileButton);
-    window.addEventListener('resize', toggleMobileButton);
-    
-    // فتح/إغلاق القائمة عند النقر على الزر
-    mobileMenuButton.addEventListener('click', () => {
-      mobileMenu.classList.toggle('active');
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        name: document.getElementById('cName').value.trim(),
+        email: document.getElementById('cEmail').value.trim(),
+        phone: document.getElementById('cPhone').value.trim(),
+        message: document.getElementById('cMessage').value.trim()
+      };
+      
+      try {
+        const submitRes = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: data.name, email: data.email, phone: data.phone })
+        });
+        
+        const msgRes = await fetch('/api/message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        
+        if (msgRes.ok) {
+          contactResponse.innerHTML = `<div style="background: #22c55e; color: white; padding: 12px; border-radius: 12px;">✅ تم إرسال رسالتك بنجاح، سنتواصل معك قريباً</div>`;
+          contactForm.reset();
+        } else {
+          contactResponse.innerHTML = `<div style="background: #ef4444; color: white; padding: 12px; border-radius: 12px;">❌ حدث خطأ، حاول مرة أخرى</div>`;
+        }
+      } catch (error) {
+        contactResponse.innerHTML = `<div style="background: #ef4444; color: white; padding: 12px; border-radius: 12px;">❌ حدث خطأ في الاتصال</div>`;
+      }
     });
-    
-    // إغلاق القائمة عند النقر على رابط
-    document.querySelectorAll('.mobile-menu .nav-link').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.remove('active');
-      });
-    });
- document.getElementById('contactForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  const name = document.getElementById('cName').value.trim();
-  const email = document.getElementById('cEmail').value.trim();
-  const phone = document.getElementById('cPhone').value.trim();
-  const message = document.getElementById('cMessage').value.trim();
-
-  if (!name || !email || !phone || !message) {
-    alert('من فضلك املا كل الحقول');
-    return;
-  }
-
-  try {
-    // الخطوة الأولى: حفظ بيانات المستخدم
-    const submitRes = await fetch('/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, phone })
-    });
-
-    const submitData = await submitRes.json();
-    console.log('Submit Response:', submitData);
-
-    // الخطوة الثانية: إرسال الرسالة
-    const msgRes = await fetch('/api/message', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, message, phone }) // ← ✅ تمت الإضافة
-    });
-
-    const msgData = await msgRes.json();
-    alert(msgData.message || 'تم الإرسال بنجاح');
-
-    // تفريغ النموذج بعد الإرسال
-    document.getElementById('contactForm').reset();
-  } catch (error) {
-    console.error('Error:', error);
-    alert('حدث خطأ أثناء الإرسال. حاول مرة أخرى.');
-  }
-});
-// منع كليك يمين
-document.addEventListener("contextmenu", function(e) {
-  e.preventDefault();
-}, false);
-
-// منع مفاتيح F12 و Ctrl+Shift+I/U/J و Ctrl+U
-document.addEventListener("keydown", function(e) {
-  // F12
-  if (e.keyCode === 123) {
-    e.preventDefault();
-    return false;
-  }
-  // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
-  if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
-    e.preventDefault();
-    return false;
-  }
-  // Ctrl+U
-  if (e.ctrlKey && e.keyCode === 85) {
-    e.preventDefault();
-    return false;
-  }
-}, false);
-
-// كشف فتح أدوات المطور
-(function detectDevTools() {
-  const threshold = 160;
-  const check = () => {
-    const start = new Date();
-    debugger;
-    const end = new Date();
-    if (end - start > threshold) {
-      document.body.innerHTML = "<h1 style='text-align:center;color:red;'>تم الكشف عن أدوات المطور! 🚫</h1>";
-    }
-    setTimeout(check, 500);
-  };
-  check();
-})();
-</script>
-
+  </script>
 </body>
 </html>
