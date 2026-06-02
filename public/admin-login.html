@@ -1,485 +1,477 @@
 <!DOCTYPE html>
-<html lang="ar">
-
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تسجيل دخول الادمن</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>تسجيل دخول الادمن | مركز بداية</title>
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/PqYGJKTd/Logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100&family=Reem+Kufi+Fun:wght@500&display=swap");
-
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: "Reem Kufi Fun", sans-serif;
-    }
-
-    :root {
-      --primaryColor: black;
-      --secondColor: #d6d6d6;
-      --backgroundColor: rgb(240, 240, 240);
-      --textColor: black;
-    }
-
-    body.dark-mode {
-      --primaryColor: white;
-      --secondColor: #333;
-      --backgroundColor: #121212;
-      --textColor: white;
     }
 
     body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      font-family: 'Cairo', 'Tajawal', sans-serif;
       min-height: 100vh;
-      background-color: var(--backgroundColor);
-      color: var(--textColor);
-      transition: background-color 0.5s, color 0.5s;
-      direction: rtl;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
     }
 
-    .box {
+    /* نمط الوضع الداكن */
+    body.dark-mode {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+
+    /* كارد تسجيل الدخول */
+    .login-container {
+      width: 100%;
+      max-width: 450px;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 28px;
+      padding: 40px 32px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
       position: relative;
-      width: 380px;
-      height: 420px;
-      background: var(--secondColor);
-      transition: 0.5s cubic-bezier(0.445, 0.05, 0.55, 0.95);
-      box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.192);
-      border-radius: 8px;
       overflow: hidden;
     }
 
-    .box::before,
-    .box::after {
-      content: "";
+    body.dark-mode .login-card {
+      background: rgba(30, 30, 46, 0.98);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* تأثير حدود متحركة */
+    .login-card::before {
+      content: '';
       position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 380px;
-      height: 420px;
-      background: linear-gradient(0deg, transparent, var(--primaryColor), var(--primaryColor));
-      transform-origin: bottom right;
-      animation: animate 6s linear infinite;
-    }
-
-    .box::after {
-      animation-delay: -3s;
-    }
-
-    @keyframes animate {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    .form {
-      position: absolute;
-      inset: 2px;
-      border-radius: 8px;
-      background: var(--backgroundColor);
-      z-index: 10;
-      padding: 50px 40px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .form h2 {
-      color: var(--primaryColor);
-      font-weight: 500;
-      text-align: center;
-      letter-spacing: 0.1em;
-      margin-bottom: 20px;
-    }
-
-    .inputBox {
-      position: relative;
-      width: 300px;
-      margin-top: 20px;
-    }
-
-    .inputBox input {
-      position: relative;
-      width: 100%;
-      padding: 10px 10px 10px 0;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--textColor);
-      font-size: 1em;
-      letter-spacing: 0.05em;
-      z-index: 10;
-    }
-
-    .inputBox label {
-      position: absolute;
-      top: 50%;
+      top: 0;
       left: 0;
-      color: var(--textColor);
-      transform: translateY(-50%);
-      pointer-events: none;
-      font-size: 1em;
-      letter-spacing: 0.05em;
-      transition: 0.5s;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899, #6366f1);
+      background-size: 200% 100%;
+      animation: gradientMove 3s ease infinite;
     }
 
-    .inputBox input:focus~label,
-    .inputBox input:valid~label {
-      top: 0%;
-      font-size: 0.75em;
-      color: var(--primaryColor);
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
-    .button {
-      margin-top: 40px;
-      width: 100%;
-    }
-
-    .button button {
-      width: 100%;
-      padding: 10px 0;
-      background-color: var(--primaryColor);
-      color: var(--backgroundColor);
-      font-weight: 500;
-      font-size: 1em;
-      border-radius: 5px;
-      cursor: pointer;
-      border: none;
-      transition: 0.3s ease;
-    }
-
-    .button button:hover {
-      background-color: #2f2f2f;
-    }
-
-    .error {
-      margin-top: 15px;
-      color: red;
-      font-weight: 600;
+    /* اللوجو */
+    .logo-area {
       text-align: center;
+      margin-bottom: 32px;
     }
 
-    .darkModeToggle {
+    .logo-img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #6366f1;
+      padding: 4px;
+      background: white;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .logo-img:hover {
+      transform: scale(1.05);
+    }
+
+    .logo-area h1 {
+      font-size: 26px;
+      font-weight: 700;
+      margin-top: 16px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .logo-area p {
+      color: #6b7280;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    body.dark-mode .logo-area p {
+      color: #9ca3af;
+    }
+
+    /* الحقول */
+    .input-group {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .input-group i {
       position: absolute;
-      bottom: 20px;
-      right: 20px;
-      background-color: var(--primaryColor);
-      color: var(--backgroundColor);
-      border: none;
-      padding: 6px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 0.9em;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      pointer-events: none;
     }
 
+    .input-group input {
+      width: 100%;
+      padding: 15px 50px 15px 20px;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      font-size: 16px;
+      font-family: 'Cairo', sans-serif;
+      transition: all 0.3s ease;
+      background: #f9fafb;
+      color: #1f2937;
+      direction: rtl;
+    }
+
+    body.dark-mode .input-group input {
+      background: #1f2937;
+      border-color: #374151;
+      color: #f3f4f6;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    }
+
+    .input-group input:focus + i {
+      color: #6366f1;
+    }
+
+    /* إظهار/إخفاء كلمة المرور */
     .toggle-password {
-      margin-top: 10px;
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #9ca3af;
+      transition: color 0.3s ease;
+    }
+
+    .toggle-password:hover {
+      color: #6366f1;
+    }
+
+    /* زر تسجيل الدخول */
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
-      gap: 5px;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 8px;
     }
 
-    .toggle-password label {
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .login-btn i {
+      font-size: 18px;
+    }
+
+    /* رسالة الخطأ */
+    .error-message {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin-top: 16px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    body.dark-mode .error-message {
+      background: #7f1d1d;
+      color: #fca5a5;
+    }
+
+    .error-message.show {
+      display: flex;
+    }
+
+    /* زر الوضع الداكن */
+    .dark-mode-toggle {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background: rgba(255, 255, 255, 0.95);
+      border: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
       cursor: pointer;
-      font-size: 0.9em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+      z-index: 100;
     }
 
-    .loading {
-      display: inline-block;
+    body.dark-mode .dark-mode-toggle {
+      background: #1f2937;
+      color: #fbbf24;
+    }
+
+    .dark-mode-toggle:hover {
+      transform: scale(1.1);
+    }
+
+    /* سبينر التحميل */
+    .spinner {
       width: 20px;
       height: 20px;
-      border: 3px solid rgba(255,255,255,.3);
+      border: 3px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 1s ease-in-out infinite;
-      margin-left: 10px;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+      display: none;
     }
 
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+
+    .login-btn.loading .btn-text {
+      display: none;
+    }
+
+    .login-btn.loading .spinner {
+      display: block;
+    }
+
+    /* روابط إضافية */
+    .extra-links {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    body.dark-mode .extra-links {
+      border-top-color: #374151;
+    }
+
+    .extra-links a {
+      color: #6366f1;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+
+    .extra-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* تنسيق للجوال */
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 32px 24px;
+      }
+      
+      .logo-img {
+        width: 70px;
+        height: 70px;
+      }
+      
+      .logo-area h1 {
+        font-size: 22px;
+      }
+    }
   </style>
 </head>
-
 <body>
-  <div class="box">
-    <form id="loginForm" class="form" autocomplete="off">
-      <h2>Login Admin</h2>
-       <div class="inputBox">
-        <input type="text" id="username" name="username" required />
-        <label for="username">Username</label>
+
+  <div class="login-container">
+    <div class="login-card">
+      <div class="logo-area">
+        <img src="https://i.postimg.cc/PqYGJKTd/Logo.jpg" alt="مركز بداية" class="logo-img">
+        <h1>مركز بداية</h1>
+        <p>التدخل المبكر والتأهيل</p>
       </div>
 
-      <div class="inputBox">
-        <input type="password" id="password" name="password" required />
-        <label for="password">Password</label>
-      </div>
+      <form id="loginForm">
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" id="username" placeholder="اسم المستخدم" required autocomplete="off">
+        </div>
 
-      <div class="button">
-        <button type="submit" id="submitBtn">Login</button>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" placeholder="كلمة المرور" required>
+          <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+        </div>
+
+        <button type="submit" class="login-btn" id="loginBtn">
+          <span class="btn-text"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</span>
+          <div class="spinner"></div>
+        </button>
+
+        <div class="error-message" id="errorMsg">
+          <i class="fas fa-exclamation-circle"></i>
+          <span id="errorText"></span>
+        </div>
+      </form>
+
+      <div class="extra-links">
+        <a href="/">🏠 العودة للصفحة الرئيسية</a>
       </div>
-      <div class="toggle-password">
-            <input type="checkbox" id="showPassword" onclick="togglePassword()">
-            <label for="showPassword">Show Password</label>
-                </div>
-      <div class="error" id="errorMsg"></div>
-    </form>
+    </div>
   </div>
 
-  <button id="darkModeToggle" class="darkModeToggle">🌙</button>
+  <button class="dark-mode-toggle" id="darkModeToggle">
+    🌙
+  </button>
 
   <script>
+    // عناصر DOM
+    const loginForm = document.getElementById('loginForm');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const errorText = document.getElementById('errorText');
+    const togglePassword = document.getElementById('togglePassword');
+    const darkModeToggle = document.getElementById('darkModeToggle');
+
     // التحقق من وجود توكن مسبقاً
     if (localStorage.getItem('token')) {
-      window.location.href = '/admin-dashboard.html';
+      window.location.href = '/admin';
     }
 
-    // تطبيق وضع الألوان المحفوظ
+    // تطبيق الوضع الداكن المحفوظ
     if (localStorage.getItem('darkMode') === 'true') {
       document.body.classList.add('dark-mode');
+      darkModeToggle.innerHTML = '☀️';
+    } else {
+      darkModeToggle.innerHTML = '🌙';
     }
 
-    // تفعيل وضع داكن/فاتح
-    const darkModeToggle = document.getElementById('darkModeToggle');
+    // تبديل الوضع الداكن
     darkModeToggle.addEventListener('click', () => {
       document.body.classList.toggle('dark-mode');
       const isDark = document.body.classList.contains('dark-mode');
-      darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+      darkModeToggle.innerHTML = isDark ? '☀️' : '🌙';
       localStorage.setItem('darkMode', isDark);
     });
 
     // إظهار/إخفاء كلمة المرور
-    const showPasswordCheckbox = document.getElementById('showPassword');
-    const passwordInput = document.getElementById('password');
-    
-    showPasswordCheckbox.addEventListener('change', function() {
-      passwordInput.type = this.checked ? 'text' : 'password';
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      togglePassword.classList.toggle('fa-eye-slash');
     });
 
-    // تعامل مع تسجيل الدخول
-    const loginForm = document.getElementById('loginForm');
-    const errorMsg = document.getElementById('errorMsg');
-    const submitBtn = document.getElementById('submitBtn');
+    // عرض رسالة الخطأ
+    function showError(message) {
+      errorText.textContent = message;
+      errorMsg.classList.add('show');
+      setTimeout(() => {
+        errorMsg.classList.remove('show');
+      }, 5000);
+    }
 
+    // معالجة تسجيل الدخول
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      // تعطيل الزر وإظهار حالة التحميل
-      submitBtn.enable = true;
-      submitBtn.innerHTML = 'Registration is in progress <span class="loading"></span>';
-      errorMsg.textContent = '';
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value.trim();
 
-      const data = {
-        username: loginForm.username.value.trim(),
-        password: loginForm.password.value.trim()
-      };
-
-      // التحقق من إدخال البيانات
-      if (!data.username || !data.password) {
-        errorMsg.textContent = 'يجب ملء جميع الحقول';
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Login';
+      if (!username || !password) {
+        showError('الرجاء إدخال اسم المستخدم وكلمة المرور');
         return;
       }
+
+      // إظهار حالة التحميل
+      loginBtn.classList.add('loading');
+      loginBtn.disabled = true;
 
       try {
         const res = await fetch('/api/admin/login', {
           method: 'POST',
           headers: { 
-            'Content-Type': 'application/json',
+            'Content-Type':application/json',
             'Accept': 'application/json'
           },
-          body: JSON.stringify(data)
+          body: JSON.stringify({ username, password })
         });
 
-        const result = await res.json();
+        const data = await res.json();
 
         if (res.ok) {
-          // حفظ التوكن في localStorage
-          localStorage.setItem('token', result.token);
+          localStorage.setItem('token', data.token);
           
-          // التحقق من الصلاحية قبل التوجيه
-          const authCheck = await fetch('/api/admin/verify-token', {
-            headers: {
-              'Authorization': `Bearer ${result.token}`
-            }
+          // التحقق من صحة التوكن قبل التوجيه
+          const verifyRes = await fetch('/api/admin/verify-token', {
+            headers: { 'Authorization': `Bearer ${data.token}` }
           });
           
-          if (authCheck.ok) {
-            window.location.href = '/admin-dashboard.html';
+          if (verifyRes.ok) {
+            window.location.href = '/admin';
           } else {
-            errorMsg.textContent = 'فشل التحقق من الصلاحية';
             localStorage.removeItem('token');
+            showError('فشل التحقق من الصلاحية، حاول مرة أخرى');
           }
         } else {
-          errorMsg.textContent = result.error || 'اسم المستخدم أو كلمة المرور غير صحيحة';
-          if (res.status === 401) {
-            errorMsg.textContent = 'بيانات الاعتماد غير صحيحة';
-          }
+          showError(data.error || 'اسم المستخدم أو كلمة المرور غير صحيحة');
         }
       } catch (err) {
         console.error('Login error:', err);
-        errorMsg.textContent = 'تعذر الاتصال بالخادم. يرجى المحاولة لاحقاً';
+        showError('تعذر الاتصال بالخادم. تأكد من تشغيل السيرفر');
       } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Login';
+        loginBtn.classList.remove('loading');
+        loginBtn.disabled = false;
+      }
+    });
+
+    // الضغط على Enter
+    passwordInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        loginForm.dispatchEvent(new Event('submit'));
       }
     });
   </script>
-</body>
-</html>
-
-  <script>
-    // معالجة نموذج الحجز
-    const bookingForm = document.getElementById('bookingForm');
-    const bookingResponse = document.getElementById('bookingResponse');
-
-    bookingForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const bookingData = {
-        name: document.getElementById('bName').value.trim(),
-        phone: document.getElementById('bPhone').value.trim(),
-        date: document.getElementById('bDate').value,
-        time: document.getElementById('bTime').value
-      };
-
-      try {
-        const res = await fetch('/api/booking', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(bookingData)
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-          bookingResponse.textContent = data.message;
-          bookingResponse.classList.remove('text-red-600');
-          bookingResponse.classList.add('text-green-600');
-          bookingForm.reset();
-        } else {
-          bookingResponse.textContent = data.error || 'حدث خطأ أثناء الحجز';
-          bookingResponse.classList.remove('text-green-600');
-          bookingResponse.classList.add('text-red-600');
-        }
-      } catch (error) {
-        bookingResponse.textContent = 'تعذر الاتصال بالخادم. حاول مرة أخرى.';
-        bookingResponse.classList.remove('text-green-600');
-        bookingResponse.classList.add('text-red-600');
-      }
-    });
-
-    // معالجة نموذج الاستعلام عن النتيجة
-    const inquiryForm = document.getElementById('inquiryForm');
-    const inquiryResponse = document.getElementById('inquiryResponse');
-
-    inquiryForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const phone = document.getElementById('iPhone').value.trim();
-
-      try {
-        const res = await fetch(`/api/results/${phone}`);
-        const data = await res.json();
-
-        if (data.success && data.results.length > 0) {
-  const result = data.results[0]; // ← خذ أول نتيجة
-
-  inquiryResponse.innerHTML = `
-    <div class="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-200 px-4 py-3 rounded">
-      <h3 class="font-bold">تم العثور على النتيجة</h3>
-      <p>رقم الهاتف: ${result.phone}</p>
-      <p class="mt-2">
-        <a href="${result.fileUrl}" class="text-blue-600 dark:text-blue-400 underline" target="_blank">
-          اضغط هنا لتحميل النتيجة
-        </a>
-      </p>
-      <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">
-        تم الرفع في: ${new Date(result.uploadedAt).toLocaleString('ar-EG')}
-      </p>
-    </div>
-  `;
-} else {
-  inquiryResponse.innerHTML = `
-    <div class="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded">
-      ${data.message || 'لا توجد نتائج لهذا الرقم'}
-    </div>
-  `;
-}
-
-      } catch (error) {
-        inquiryResponse.innerHTML = `
-          <div class="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded">
-            تعذر الاتصال بالخادم. حاول مرة أخرى.
-          </div>
-        `;
-      }
-    });
-
-    // تبديل الوضع الداكن/الفاتح
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    
-    // تحميل التفضيل المحفوظ
-    if (localStorage.getItem('darkMode') === 'true') {
-      document.documentElement.classList.add('dark');
-      themeIcon.textContent = '☀️';
-    }
-
-    themeToggle.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.toggle('dark');
-      localStorage.setItem('darkMode', isDark);
-      themeIcon.textContent = isDark ? '☀️' : '🌙';
-    });
- document.getElementById('contactForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  const name = document.getElementById('cName').value.trim();
-  const email = document.getElementById('cEmail').value.trim();
-  const phone = document.getElementById('cPhone').value.trim();
-  const message = document.getElementById('cMessage').value.trim();
-
-  if (!name || !email || !phone || !message) {
-    alert('من فضلك املا كل الحقول');
-    return;
-  }
-
-  try {
-    // الخطوة الأولى: حفظ بيانات المستخدم
-    const submitRes = await fetch('/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, phone })
-    });
-
-    const submitData = await submitRes.json();
-    console.log('Submit Response:', submitData);
-
-    // الخطوة الثانية: إرسال الرسالة
-    const msgRes = await fetch('/api/message', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, message, phone }) // ← ✅ تمت الإضافة
-    });
-
-    const msgData = await msgRes.json();
-    alert(msgData.message || 'تم الإرسال بنجاح');
-
-    // تفريغ النموذج بعد الإرسال
-    document.getElementById('contactForm').reset();
-  } catch (error) {
-    console.error('Error:', error);
-    alert('حدث خطأ أثناء الإرسال. حاول مرة أخرى.');
-  }
-});
-
-</script>
-
 </body>
 </html>
