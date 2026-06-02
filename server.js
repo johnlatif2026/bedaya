@@ -2,22 +2,36 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const session = require('express-session');
 const path = require('path');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const admin = require('firebase-admin');
+
+// ========== تهيئة Firebase ==========
+let db;
+try {
+  // قراءة إعدادات Firebase من متغير البيئة
+  const firebaseConfig = JSON.parse(process.env.FIREBASE_CONFIG);
+  
+  // تهيئة التطبيق
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      credential: admin.credential.cert(firebaseConfig),
+      databaseURL: `https://${firebaseConfig.project_id}.firebaseio.com` // لـ Realtime Database
+    });
+  }
+  
+  db = admin.firestore(); // استخدام Firestore (موصى به)
+  console.log('✅ Firebase initialized successfully');
+} catch (error) {
+  console.error('❌ Firebase initialization failed:', error.message);
+  process.exit(1);
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// بيانات مؤقتة
-const usersData = [];
-const adminMessages = [];
-const bookingsData = [];
-const resultsData = [];
-let salesDB = []; // تغيير إلى let بدلاً من const
 
 // Middleware
 app.use(cors());
@@ -52,19 +66,19 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// في قسم توليد التوكن
+// توليد التوكن
 function generateToken(user) {
   return jwt.sign(
     { 
       user,
-      exp: Math.floor(Date.now() / 1000) + (60 * 60) // صلاحية ساعة
+      exp: Math.floor(Date.now() / 1000) + (60 * 60)
     }, 
     process.env.SESSION_SECRET
   );
 }
 
-// تحسين middleware المصادقة
-function checkAuth(req, res, next) {
+// Middleware المصادقة
+async function checkAuth(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
   
@@ -91,13 +105,26 @@ function checkAuth(req, res, next) {
 // ========== Routes ========== //
 
 // استقبال بيانات المستخدم
-app.post('/api/submit', (req, res) => {
+app.post('/api/submit', async (req, res) => {
   const { name, email, phone } = req.body;
   if (!name || !email || !phone) {
     return res.status(400).json({ error: 'الرجاء ملء جميع الحقول' });
   }
-  usersData.push({ name, email, phone, receivedAt: new Date() });
-  res.json({ message: 'تم استلام البيانات بنجاح' });
+  
+  try {
+    const userData = { 
+      name, 
+      email, 
+      phone, 
+      receivedAt: new Date().toISOString() 
+    };
+    
+    await db.collection('users').add(userData);
+    res.json({ message: 'تم استلام البيانات بنجاح' });
+  } catch (error) {
+    console.error('Error saving user:', error);
+    res.status(500).json({ error: 'حدث خطأ في حفظ البيانات' });
+  }
 });
 
 // رسالة عامة
@@ -120,7 +147,13 @@ app.post('/api/message', async (req, res) => {
       `
     });
 
-    adminMessages.push({ email, message, name, phone: req.body.phone || null, sentAt: new Date() });
+    await db.collection('adminMessages').add({
+      email, 
+      message, 
+      name, 
+      phone: req.body.phone || null, 
+      sentAt: new Date().toISOString()
+    });
 
     res.json({ message: 'تم إرسال الرسالة بنجاح' });
 
@@ -131,51 +164,91 @@ app.post('/api/message', async (req, res) => {
 });
 
 // حجز موعد
-app.post('/api/booking', (req, res) => {
+app.post('/api/booking', async (req, res) => {
   const { name, phone, date, time } = req.body;
   if (!name || !phone || !date || !time) {
     return res.status(400).json({ error: 'جميع الحقول مطلوبة' });
   }
-  bookingsData.push({ name, phone, date, time, receivedAt: new Date() });
+  
+  try {
+    const bookingData = { 
+      name, 
+      phone, 
+      date, 
+      time, 
+      receivedAt: new Date().toISOString() 
+    };
+    
+    await db.collection('bookings').add(bookingData);
 
-  if (process.env.ADMIN_EMAIL) {
-    transporter.sendMail({
-      from: `"Bedaya System" <${process.env.SMTP_USER}>`,
-      to: process.env.ADMIN_EMAIL,
-      subject: 'حجز جديد في نظام بداية',
-      html: `
-        <h2>حجز جديد</h2>
-        <p><strong>الاسم:</strong> ${name}</p>
-        <p><strong>الهاتف:</strong> ${phone}</p>
-        <p><strong>التاريخ:</strong> ${date}</p>
-        <p><strong>الوقت:</strong> ${time}</p>
-        <p>الاستلام: ${new Date().toLocaleString('ar-EG')}</p>
-      `
-    }).catch(console.error);
+    if (process.env.ADMIN_EMAIL) {
+      transporter.sendMail({
+        from: `"Bedaya System" <${process.env.SMTP_USER}>`,
+        to: process.env.ADMIN_EMAIL,
+        subject: 'حجز جديد في نظام بداية',
+        html: `
+          <h2>حجز جديد</h2>
+          <p><strong>الاسم:</strong> ${name}</p>
+          <p><strong>الهاتف:</strong> ${phone}</p>
+          <p><strong>التاريخ:</strong> ${date}</p>
+          <p><strong>الوقت:</strong> ${time}</p>
+          <p>الاستلام: ${new Date().toLocaleString('ar-EG')}</p>
+        `
+      }).catch(console.error);
+    }
+
+    res.json({ message: 'تم استلام الحجز بنجاح' });
+  } catch (error) {
+    console.error('Error saving booking:', error);
+    res.status(500).json({ error: 'حدث خطأ في حفظ الحجز' });
   }
-
-  res.json({ message: 'تم استلام الحجز بنجاح' });
 });
 
 // رفع نتيجة
-app.post('/api/upload-result', upload.single('resultFile'), (req, res) => {
+app.post('/api/upload-result', upload.single('resultFile'), async (req, res) => {
   const { phone } = req.body;
   if (!phone || !req.file) {
     return res.status(400).json({ error: 'رقم الهاتف والملف مطلوبان' });
   }
-  const fileUrl = '/uploads/' + req.file.filename;
-  resultsData.push({ phone, fileUrl, uploadedAt: new Date() });
-  res.json({ message: 'تم رفع النتيجة بنجاح', fileUrl });
+  
+  try {
+    const fileUrl = '/uploads/' + req.file.filename;
+    const resultData = { 
+      phone, 
+      fileUrl, 
+      uploadedAt: new Date().toISOString() 
+    };
+    
+    await db.collection('results').add(resultData);
+    res.json({ message: 'تم رفع النتيجة بنجاح', fileUrl });
+  } catch (error) {
+    console.error('Error uploading result:', error);
+    res.status(500).json({ error: 'حدث خطأ في رفع النتيجة' });
+  }
 });
 
 // البحث عن نتيجة
-app.get('/api/results/:phone', (req, res) => {
+app.get('/api/results/:phone', async (req, res) => {
   const phone = req.params.phone;
-  const results = resultsData.filter(r => r.phone === phone);
-  if (results.length > 0) {
-    res.json({ success: true, results });
-  } else {
-    res.status(404).json({ success: false, message: 'لا توجد نتائج لهذا الرقم' });
+  
+  try {
+    const snapshot = await db.collection('results')
+      .where('phone', '==', phone)
+      .get();
+    
+    const results = [];
+    snapshot.forEach(doc => {
+      results.push({ id: doc.id, ...doc.data() });
+    });
+    
+    if (results.length > 0) {
+      res.json({ success: true, results });
+    } else {
+      res.status(404).json({ success: false, message: 'لا توجد نتائج لهذا الرقم' });
+    }
+  } catch (error) {
+    console.error('Error fetching results:', error);
+    res.status(500).json({ error: 'حدث خطأ في البحث' });
   }
 });
 
@@ -199,9 +272,7 @@ app.get('/api/admin/verify-token', checkAuth, (req, res) => {
 });
 
 // تسجيل الخروج
-// تحسين نقطة نهاية تسجيل الخروج
 app.post('/api/admin/logout', checkAuth, (req, res) => {
-  // يمكنك هنا إضافة التوكن إلى القائمة السوداء إذا أردت
   res.json({ 
     message: 'تم تسجيل الخروج بنجاح',
     logoutTime: new Date().toISOString()
@@ -209,50 +280,67 @@ app.post('/api/admin/logout', checkAuth, (req, res) => {
 });
 
 // نظام المبيعات
-app.post('/api/admin/sales', checkAuth, (req, res) => {
+app.post('/api/admin/sales', checkAuth, async (req, res) => {
   const { customerName, amount } = req.body;
   
   if (!customerName || !amount || isNaN(amount)) {
     return res.status(400).json({ error: 'اسم العميل ومبلغ البيع (رقم) مطلوبان' });
   }
 
-  const newSale = {
-    id: Date.now().toString(),
-    customerName,
-    amount: parseFloat(amount),
-    saleTime: new Date(),
-    createdAt: new Date()
-  };
+  try {
+    const newSale = {
+      id: Date.now().toString(),
+      customerName,
+      amount: parseFloat(amount),
+      saleTime: new Date().toISOString(),
+      createdAt: new Date().toISOString()
+    };
 
-  salesDB.push(newSale);
-  
-  res.status(201).json({
-    message: 'تم تسجيل عملية البيع بنجاح',
-    sale: newSale
-  });
+    await db.collection('sales').doc(newSale.id).set(newSale);
+    
+    res.status(201).json({
+      message: 'تم تسجيل عملية البيع بنجاح',
+      sale: newSale
+    });
+  } catch (error) {
+    console.error('Error saving sale:', error);
+    res.status(500).json({ error: 'حدث خطأ في تسجيل البيع' });
+  }
 });
 
 // الحصول على مبيعات اليوم
-app.get('/api/admin/sales/today', checkAuth, (req, res) => {
-  const today = new Date();
-  const todayStart = new Date(today.setHours(0, 0, 0, 0));
-  const todayEnd = new Date(today.setHours(23, 59, 59, 999));
+app.get('/api/admin/sales/today', checkAuth, async (req, res) => {
+  try {
+    const today = new Date();
+    const todayStart = new Date(today.setHours(0, 0, 0, 0)).toISOString();
+    const todayEnd = new Date(today.setHours(23, 59, 59, 999)).toISOString();
 
-  const todaySales = salesDB.filter(sale => {
-    const saleDate = new Date(sale.saleTime);
-    return saleDate >= todayStart && saleDate <= todayEnd;
-  });
+    const snapshot = await db.collection('sales')
+      .where('saleTime', '>=', todayStart)
+      .where('saleTime', '<=', todayEnd)
+      .get();
+    
+    const todaySales = [];
+    let todayTotal = 0;
+    
+    snapshot.forEach(doc => {
+      const sale = doc.data();
+      todaySales.push(sale);
+      todayTotal += sale.amount;
+    });
 
-  const todayTotal = todaySales.reduce((sum, sale) => sum + sale.amount, 0);
-
-  res.json({
-    sales: todaySales,
-    todayTotal
-  });
+    res.json({
+      sales: todaySales,
+      todayTotal
+    });
+  } catch (error) {
+    console.error('Error fetching sales:', error);
+    res.status(500).json({ error: 'حدث خطأ في جلب المبيعات' });
+  }
 });
 
 // تعديل عملية بيع
-app.put('/api/admin/sale/:id', checkAuth, (req, res) => {
+app.put('/api/admin/sale/:id', checkAuth, async (req, res) => {
   const saleId = req.params.id;
   const { customerName, amount } = req.body;
 
@@ -260,84 +348,165 @@ app.put('/api/admin/sale/:id', checkAuth, (req, res) => {
     return res.status(400).json({ error: 'اسم العميل ومبلغ البيع (رقم) مطلوبان' });
   }
 
-  const saleIndex = salesDB.findIndex(sale => sale.id === saleId);
-  
-  if (saleIndex === -1) {
-    return res.status(404).json({ error: 'عملية البيع غير موجودة' });
+  try {
+    const saleRef = db.collection('sales').doc(saleId);
+    const saleDoc = await saleRef.get();
+    
+    if (!saleDoc.exists) {
+      return res.status(404).json({ error: 'عملية البيع غير موجودة' });
+    }
+
+    const updatedSale = {
+      ...saleDoc.data(),
+      customerName,
+      amount: parseFloat(amount),
+      updatedAt: new Date().toISOString()
+    };
+
+    await saleRef.update(updatedSale);
+
+    res.json({
+      message: 'تم تحديث عملية البيع بنجاح',
+      sale: updatedSale
+    });
+  } catch (error) {
+    console.error('Error updating sale:', error);
+    res.status(500).json({ error: 'حدث خطأ في تحديث البيع' });
   }
-
-  salesDB[saleIndex] = {
-    ...salesDB[saleIndex],
-    customerName,
-    amount: parseFloat(amount),
-    updatedAt: new Date()
-  };
-
-  res.json({
-    message: 'تم تحديث عملية البيع بنجاح',
-    sale: salesDB[saleIndex]
-  });
 });
 
 // حذف عملية بيع
-app.delete('/api/admin/sale/:id', checkAuth, (req, res) => {
+app.delete('/api/admin/sale/:id', checkAuth, async (req, res) => {
   const saleId = req.params.id;
-  const initialLength = salesDB.length;
-  
-  salesDB = salesDB.filter(sale => sale.id !== saleId);
-  
-  if (salesDB.length === initialLength) {
-    return res.status(404).json({ error: 'عملية البيع غير موجودة' });
-  }
 
-  res.json({
-    message: 'تم حذف عملية البيع بنجاح',
-    remainingSales: salesDB.length
-  });
+  try {
+    const saleRef = db.collection('sales').doc(saleId);
+    const saleDoc = await saleRef.get();
+    
+    if (!saleDoc.exists) {
+      return res.status(404).json({ error: 'عملية البيع غير موجودة' });
+    }
+
+    await saleRef.delete();
+
+    res.json({
+      message: 'تم حذف عملية البيع بنجاح'
+    });
+  } catch (error) {
+    console.error('Error deleting sale:', error);
+    res.status(500).json({ error: 'حدث خطأ في حذف البيع' });
+  }
 });
 
 // المستخدمون
-app.get('/api/admin/users', checkAuth, (req, res) => {
-  const usersWithMessages = usersData.map(user => {
-    const userMessages = adminMessages.filter(msg => msg.email === user.email);
-    return {
-      ...user,
-      messages: userMessages.map(m => m.message).join('\n\n') || 'لا توجد رسائل'
-    };
-  });
-  res.json(usersWithMessages);
+app.get('/api/admin/users', checkAuth, async (req, res) => {
+  try {
+    const usersSnapshot = await db.collection('users').get();
+    const messagesSnapshot = await db.collection('adminMessages').get();
+    
+    const users = [];
+    const messagesMap = new Map();
+    
+    messagesSnapshot.forEach(doc => {
+      const msg = doc.data();
+      if (!messagesMap.has(msg.email)) {
+        messagesMap.set(msg.email, []);
+      }
+      messagesMap.get(msg.email).push(msg.message);
+    });
+    
+    usersSnapshot.forEach(doc => {
+      const user = doc.data();
+      const userMessages = messagesMap.get(user.email) || [];
+      users.push({
+        ...user,
+        messages: userMessages.join('\n\n') || 'لا توجد رسائل'
+      });
+    });
+    
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'حدث خطأ في جلب المستخدمين' });
+  }
 });
 
 // الحجوزات
-app.get('/api/admin/bookings', checkAuth, (req, res) => {
-  res.json(bookingsData);
+app.get('/api/admin/bookings', checkAuth, async (req, res) => {
+  try {
+    const snapshot = await db.collection('bookings').get();
+    const bookings = [];
+    snapshot.forEach(doc => bookings.push({ id: doc.id, ...doc.data() }));
+    res.json(bookings);
+  } catch (error) {
+    console.error('Error fetching bookings:', error);
+    res.status(500).json({ error: 'حدث خطأ في جلب الحجوزات' });
+  }
 });
 
 // النتائج
-app.get('/api/admin/results', checkAuth, (req, res) => {
-  res.json(resultsData);
+app.get('/api/admin/results', checkAuth, async (req, res) => {
+  try {
+    const snapshot = await db.collection('results').get();
+    const results = [];
+    snapshot.forEach(doc => results.push({ id: doc.id, ...doc.data() }));
+    res.json(results);
+  } catch (error) {
+    console.error('Error fetching results:', error);
+    res.status(500).json({ error: 'حدث خطأ في جلب النتائج' });
+  }
 });
 
 // حذف مستخدم
-app.delete('/api/admin/user/:email', checkAuth, (req, res) => {
+app.delete('/api/admin/user/:email', checkAuth, async (req, res) => {
   const email = decodeURIComponent(req.params.email);
-  const index = usersData.findIndex(user => user.email === email);
-  if (index === -1) return res.status(404).json({ error: 'المستخدم غير موجود' });
-  usersData.splice(index, 1);
-  res.json({ message: `تم حذف المستخدم ${email} بنجاح` });
+  
+  try {
+    const snapshot = await db.collection('users')
+      .where('email', '==', email)
+      .get();
+    
+    if (snapshot.empty) {
+      return res.status(404).json({ error: 'المستخدم غير موجود' });
+    }
+    
+    const batch = db.batch();
+    snapshot.forEach(doc => batch.delete(doc.ref));
+    await batch.commit();
+    
+    res.json({ message: `تم حذف المستخدم ${email} بنجاح` });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ error: 'حدث خطأ في حذف المستخدم' });
+  }
 });
 
 // حذف حجز
-app.delete('/api/admin/booking/:phone', checkAuth, (req, res) => {
+app.delete('/api/admin/booking/:phone', checkAuth, async (req, res) => {
   const phone = decodeURIComponent(req.params.phone);
-  const index = bookingsData.findIndex(b => b.phone === phone);
-  if (index === -1) return res.status(404).json({ error: 'الحجز غير موجود' });
-  bookingsData.splice(index, 1);
-  res.json({ message: `تم حذف الحجز لرقم ${phone} بنجاح` });
+  
+  try {
+    const snapshot = await db.collection('bookings')
+      .where('phone', '==', phone)
+      .get();
+    
+    if (snapshot.empty) {
+      return res.status(404).json({ error: 'الحجز غير موجود' });
+    }
+    
+    const batch = db.batch();
+    snapshot.forEach(doc => batch.delete(doc.ref));
+    await batch.commit();
+    
+    res.json({ message: `تم حذف الحجز لرقم ${phone} بنجاح` });
+  } catch (error) {
+    console.error('Error deleting booking:', error);
+    res.status(500).json({ error: 'حدث خطأ في حذف الحجز' });
+  }
 });
 
 // تعديل نتيجة موجودة
-app.put('/api/admin/result/:phone', upload.single('resultFile'), checkAuth, (req, res) => {
+app.put('/api/admin/result/:phone', upload.single('resultFile'), checkAuth, async (req, res) => {
   const oldPhone = decodeURIComponent(req.params.phone);
   const newPhone = req.body.phone;
   const resultFile = req.file;
@@ -346,51 +515,83 @@ app.put('/api/admin/result/:phone', upload.single('resultFile'), checkAuth, (req
     return res.status(400).json({ error: 'رقم الهاتف مطلوب' });
   }
   
-  const resultIndex = resultsData.findIndex(r => r.phone === oldPhone);
-  if (resultIndex === -1) {
-    return res.status(404).json({ error: 'النتيجة غير موجودة' });
-  }
-  
-  // تحديث رقم الهاتف
-  resultsData[resultIndex].phone = newPhone;
-  
-  // إذا تم رفع ملف جديد
-  if (resultFile) {
-    // حذف الملف القديم إذا كان موجوداً
-    const oldFilePath = path.join(__dirname, 'public', resultsData[resultIndex].fileUrl);
-    fs.unlink(oldFilePath, (err) => {
-      if (err) console.error('فشل في حذف الملف القديم:', err);
-    });
+  try {
+    const snapshot = await db.collection('results')
+      .where('phone', '==', oldPhone)
+      .get();
     
-    // تحديث رابط الملف الجديد
-    resultsData[resultIndex].fileUrl = '/uploads/' + resultFile.filename;
+    if (snapshot.empty) {
+      return res.status(404).json({ error: 'النتيجة غير موجودة' });
+    }
+    
+    const doc = snapshot.docs[0];
+    const resultData = doc.data();
+    
+    // حذف الملف القديم إذا كان موجوداً وكان هناك ملف جديد
+    if (resultFile && resultData.fileUrl) {
+      const oldFilePath = path.join(__dirname, 'public', resultData.fileUrl);
+      fs.unlink(oldFilePath, (err) => {
+        if (err) console.error('فشل في حذف الملف القديم:', err);
+      });
+    }
+    
+    const updatedData = {
+      phone: newPhone,
+      updatedAt: new Date().toISOString()
+    };
+    
+    if (resultFile) {
+      updatedData.fileUrl = '/uploads/' + resultFile.filename;
+    } else {
+      updatedData.fileUrl = resultData.fileUrl;
+    }
+    
+    await doc.ref.update(updatedData);
+    
+    res.json({ 
+      message: 'تم تحديث النتيجة بنجاح',
+      result: { id: doc.id, ...resultData, ...updatedData }
+    });
+  } catch (error) {
+    console.error('Error updating result:', error);
+    res.status(500).json({ error: 'حدث خطأ في تحديث النتيجة' });
   }
-  
-  // تحديث تاريخ التعديل
-  resultsData[resultIndex].updatedAt = new Date();
-  
-  res.json({ 
-    message: 'تم تحديث النتيجة بنجاح',
-    result: resultsData[resultIndex]
-  });
 });
 
 // حذف نتيجة
-app.delete('/api/admin/result/:phone', checkAuth, (req, res) => {
+app.delete('/api/admin/result/:phone', checkAuth, async (req, res) => {
   const phone = decodeURIComponent(req.params.phone);
-  const index = resultsData.findIndex(r => r.phone === phone);
-  if (index === -1) return res.status(404).json({ error: 'النتيجة غير موجودة' });
-
-  const filePath = path.join(__dirname, 'public', resultsData[index].fileUrl);
-  fs.unlink(filePath, (err) => {
-    if (err) console.error('فشل في حذف الملف:', err);
-  });
-
-  resultsData.splice(index, 1);
-  res.json({ message: `تم حذف النتيجة لرقم ${phone} بنجاح` });
+  
+  try {
+    const snapshot = await db.collection('results')
+      .where('phone', '==', phone)
+      .get();
+    
+    if (snapshot.empty) {
+      return res.status(404).json({ error: 'النتيجة غير موجودة' });
+    }
+    
+    const doc = snapshot.docs[0];
+    const resultData = doc.data();
+    
+    // حذف الملف من السيرفر
+    if (resultData.fileUrl) {
+      const filePath = path.join(__dirname, 'public', resultData.fileUrl);
+      fs.unlink(filePath, (err) => {
+        if (err) console.error('فشل في حذف الملف:', err);
+      });
+    }
+    
+    await doc.ref.delete();
+    
+    res.json({ message: `تم حذف النتيجة لرقم ${phone} بنجاح` });
+  } catch (error) {
+    console.error('Error deleting result:', error);
+    res.status(500).json({ error: 'حدث خطأ في حذف النتيجة' });
+  }
 });
 
-// إرسال رسالة للعميل (من الادمن)
+// إرسال رسالة للعميل
 app.post('/api/admin/message', checkAuth, async (req, res) => {
   const { email, message } = req.body;
 
@@ -406,7 +607,11 @@ app.post('/api/admin/message', checkAuth, async (req, res) => {
       html: `<p>${message}</p>`
     });
 
-    adminMessages.push({ email, message, sentAt: new Date() });
+    await db.collection('adminMessages').add({
+      email,
+      message,
+      sentAt: new Date().toISOString()
+    });
 
     res.json({ message: 'تم إرسال الرسالة بنجاح' });
 
@@ -417,19 +622,33 @@ app.post('/api/admin/message', checkAuth, async (req, res) => {
 });
 
 // جلب الرسائل
-app.get('/api/admin/messages', checkAuth, (req, res) => {
-  res.json(adminMessages);
+app.get('/api/admin/messages', checkAuth, async (req, res) => {
+  try {
+    const snapshot = await db.collection('adminMessages')
+      .orderBy('sentAt', 'desc')
+      .get();
+    
+    const messages = [];
+    snapshot.forEach(doc => messages.push({ id: doc.id, ...doc.data() }));
+    
+    res.json(messages);
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    res.status(500).json({ error: 'حدث خطأ في جلب الرسائل' });
+  }
 });
 
 // حذف رسالة
-app.delete('/api/admin/message/:index', checkAuth, (req, res) => {
-  const index = parseInt(req.params.index);
-  if (isNaN(index) || index < 0 || index >= adminMessages.length) {
-    return res.status(400).json({ error: 'رقم الرسالة غير صالح' });
+app.delete('/api/admin/message/:id', checkAuth, async (req, res) => {
+  const id = req.params.id;
+  
+  try {
+    await db.collection('adminMessages').doc(id).delete();
+    res.json({ message: 'تم حذف الرسالة بنجاح' });
+  } catch (error) {
+    console.error('Error deleting message:', error);
+    res.status(500).json({ error: 'حدث خطأ في حذف الرسالة' });
   }
-
-  adminMessages.splice(index, 1);
-  res.json({ message: 'تم حذف الرسالة بنجاح' });
 });
 
 // صفحة الادمن
@@ -440,4 +659,5 @@ app.get('/admin', (req, res) => {
 // تشغيل السيرفر
 app.listen(PORT, () => {
   console.log(`✅ Server is running on http://localhost:${PORT}`);
+  console.log(`📊 Using Firebase Firestore as database`);
 });
