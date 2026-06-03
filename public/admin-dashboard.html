@@ -2,948 +2,158 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>لوحة تحكم الادمن | مركز بداية</title>
-  <link rel="icon" type="image/png" href="https://i.postimg.cc/PqYGJKTd/Logo.jpg">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم بداية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Cairo', 'Tajawal', sans-serif;
-      background: #f1f5f9;
-      color: #1e293b;
-      transition: all 0.3s ease;
-    }
-
-    body.dark-mode {
-      background: #0f172a;
-      color: #f1f5f9;
-    }
-
-    /* الهيدر */
-    .header {
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-      padding: 16px 32px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .nav-container {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo img {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid white;
-    }
-
-    .logo h2 {
-      color: white;
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .logout-btn {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .logout-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateY(-2px);
-    }
-
-    /* الشريط الجانبي (للشاشات الكبيرة) */
-    .sidebar {
-      position: fixed;
-      top: 80px;
-      right: 0;
-      width: 260px;
-      height: calc(100vh - 80px);
-      background: white;
-      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
-      overflow-y: auto;
-      z-index: 99;
-      transition: all 0.3s ease;
-    }
-
-    body.dark-mode .sidebar {
-      background: #1e293b;
-      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .sidebar-menu {
-      list-style: none;
-      padding: 20px 0;
-    }
-
-    .sidebar-menu li {
-      margin-bottom: 8px;
-    }
-
-    .sidebar-menu li a {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 24px;
-      color: #475569;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      font-weight: 500;
-      border-right: 3px solid transparent;
-    }
-
-    body.dark-mode .sidebar-menu li a {
-      color: #cbd5e1;
-    }
-
-    .sidebar-menu li a:hover,
-    .sidebar-menu li.active a {
-      background: #f1f5f9;
-      color: #6366f1;
-      border-right-color: #6366f1;
-    }
-
-    body.dark-mode .sidebar-menu li a:hover,
-    body.dark-mode .sidebar-menu li.active a {
-      background: #334155;
-      color: #a5b4fc;
-    }
-
-    /* المحتوى الرئيسي */
-    .main-content {
-      margin-right: 260px;
-      margin-top: 80px;
-      padding: 24px 32px;
-      transition: all 0.3s ease;
-    }
-
-    /* الأقسام */
-    .section-card {
-      background: white;
-      border-radius: 24px;
-      padding: 28px;
-      margin-bottom: 32px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s ease;
-    }
-
-    body.dark-mode .section-card {
-      background: #1e293b;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .section-title {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #6366f1;
-    }
-
-    /* إحصائيات */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .stat-card {
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-      color: white;
-      padding: 24px;
-      border-radius: 20px;
-      text-align: center;
-    }
-
-    .stat-card i {
-      font-size: 32px;
-      margin-bottom: 12px;
-    }
-
-    .stat-card h3 {
-      font-size: 28px;
-      font-weight: 800;
-    }
-
-    .stat-card p {
-      font-size: 14px;
-      opacity: 0.9;
-    }
-
-    /* الجداول */
-    .table-responsive {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 14px 12px;
-      text-align: center;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    body.dark-mode th,
-    body.dark-mode td {
-      border-bottom-color: #334155;
-    }
-
-    th {
-      background: #f8fafc;
-      font-weight: 700;
-      color: #6366f1;
-    }
-
-    body.dark-mode th {
-      background: #334155;
-      color: #a5b4fc;
-    }
-
-    /* النماذج */
-    .form-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      font-family: 'Cairo', sans-serif;
-      background: #f8fafc;
-      transition: all 0.3s ease;
-    }
-
-    body.dark-mode .form-group input,
-    body.dark-mode .form-group textarea,
-    body.dark-mode .form-group select {
-      background: #334155;
-      border-color: #475569;
-      color: #f1f5f9;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: #6366f1;
-    }
-
-    /* الأزرار */
-    .btn {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      font-family: 'Cairo', sans-serif;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
-    }
-
-    .btn-danger {
-      background: #ef4444;
-      color: white;
-    }
-
-    .btn-danger:hover {
-      background: #dc2626;
-    }
-
-    .btn-warning {
-      background: #f59e0b;
-      color: white;
-    }
-
-    .btn-warning:hover {
-      background: #d97706;
-    }
-
-    .btn-success {
-      background: #22c55e;
-      color: white;
-    }
-
-    .btn-success:hover {
-      background: #16a34a;
-    }
-
-    /* زرار الوضع الداكن */
-    .theme-toggle {
-      position: fixed;
-      bottom: 24px;
-      left: 24px;
-      background: white;
-      border: none;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-      transition: all 0.3s ease;
-      z-index: 1000;
-    }
-
-    body.dark-mode .theme-toggle {
-      background: #1e293b;
-      color: #fbbf24;
-    }
-
-    .theme-toggle:hover {
-      transform: scale(1.1);
-    }
-
-    /* التبويبات */
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-
-    .tab-btn {
-      padding: 10px 24px;
-      background: #f1f5f9;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    body.dark-mode .tab-btn {
-      background: #334155;
-      color: #cbd5e1;
-    }
-
-    .tab-btn.active {
-      background: #6366f1;
-      color: white;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* استجابة للجوال */
-    @media (max-width: 768px) {
-      .sidebar {
-        transform: translateX(100%);
-        width: 100%;
-        z-index: 200;
-      }
-      
-      .sidebar.open {
-        transform: translateX(0);
-      }
-      
-      .main-content {
-        margin-right: 0;
-        padding: 20px 16px;
-      }
-      
-      .menu-toggle-sidebar {
-        display: block;
-        background: none;
-        border: none;
-        color: white;
-        font-size: 24px;
-        cursor: pointer;
-      }
-    }
-
-    @media (min-width: 769px) {
-      .menu-toggle-sidebar {
-        display: none;
-      }
-    }
+    body { font-family: 'Cairo', sans-serif; transition: 0.3s; }
+    .dark { background: #0f172a; color: #f1f5f9; }
+    .dashboard-card { transition: all 0.3s ease; border-radius: 24px; }
+    .dashboard-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -12px rgba(0,0,0,0.2); }
+    button { transition: 0.2s; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+    .dark th, .dark td { border-color: #334155; }
+    .edit-form { background: rgba(0,0,0,0.05); padding: 15px; border-radius: 20px; margin-top: 10px; display: none; }
   </style>
 </head>
-<body>
-
-  <!-- الهيدر -->
-  <header class="header">
-    <div class="nav-container">
-      <div class="logo">
-        <img src="https://i.postimg.cc/PqYGJKTd/Logo.jpg" alt="مركز بداية">
-        <h2>لوحة التحكم</h2>
+<body class="bg-gray-100 dark:bg-gray-900">
+  <div class="container mx-auto p-4 md:p-8">
+    <div class="flex justify-between items-center flex-wrap gap-4 mb-8">
+      <div class="flex items-center gap-3">
+        <img src="https://i.postimg.cc/PqYGJKTd/Logo.jpg" class="w-12 h-12 rounded-full shadow">
+        <h1 class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">لوحة تحكم بداية</h1>
       </div>
-      
-      <div class="header-actions">
-        <button class="menu-toggle-sidebar" id="menuToggleSidebar">
-          <i class="fas fa-bars"></i>
-        </button>
-        <button class="logout-btn" id="logoutBtn">
-          <i class="fas fa-sign-out-alt"></i>
-          <span>تسجيل خروج</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- الشريط الجانبي -->
-  <aside class="sidebar" id="sidebar">
-    <ul class="sidebar-menu">
-      <li class="active" data-tab="dashboard">
-        <a href="#"><i class="fas fa-chart-line"></i> الرئيسية</a>
-      </li>
-      <li data-tab="sales">
-        <a href="#"><i class="fas fa-chart-simple"></i> المبيعات</a>
-      </li>
-      <li data-tab="users">
-        <a href="#"><i class="fas fa-users"></i> المستخدمين</a>
-      </li>
-      <li data-tab="bookings">
-        <a href="#"><i class="fas fa-calendar-check"></i> الحجوزات</a>
-      </li>
-      <li data-tab="results">
-        <a href="#"><i class="fas fa-file-alt"></i> النتائج</a>
-      </li>
-      <li data-tab="messages">
-        <a href="#"><i class="fas fa-envelope"></i> الرسائل</a>
-      </li>
-    </ul>
-  </aside>
-
-  <!-- زرار الوضع الداكن -->
-  <button class="theme-toggle" id="themeToggle">
-    🌙
-  </button>
-
-  <!-- المحتوى الرئيسي -->
-  <main class="main-content" id="mainContent">
-
-    <!-- تبويب الرئيسية -->
-    <div class="tab-content active" id="dashboardTab">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <i class="fas fa-users"></i>
-          <h3 id="totalUsers">0</h3>
-          <p>إجمالي المستخدمين</p>
-        </div>
-        <div class="stat-card">
-          <i class="fas fa-calendar-check"></i>
-          <h3 id="totalBookings">0</h3>
-          <p>إجمالي الحجوزات</p>
-        </div>
-        <div class="stat-card">
-          <i class="fas fa-file-alt"></i>
-          <h3 id="totalResults">0</h3>
-          <p>النتائج المرفوعة</p>
-        </div>
-        <div class="stat-card">
-          <i class="fas fa-chart-simple"></i>
-          <h3 id="todaySales">0</h3>
-          <p>مبيعات اليوم (جنيه)</p>
-        </div>
-      </div>
-
-      <div class="section-card">
-        <h3 class="section-title"><i class="fas fa-chart-simple"></i> آخر المبيعات</h3>
-        <div class="table-responsive">
-          <table id="recentSalesTable">
-            <thead>
-              <tr><th>اسم العميل</th><th>المبلغ</th><th>التاريخ</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
+      <div class="flex gap-3">
+        <button id="darkModeDashboard" class="bg-indigo-600 text-white px-4 py-2 rounded-full"><i class="fas fa-moon"></i> الوضع الداكن</button>
+        <button id="logoutBtn" class="bg-red-500 text-white px-5 py-2 rounded-full hover:bg-red-600"><i class="fas fa-sign-out-alt"></i> خروج</button>
       </div>
     </div>
 
-    <!-- تبويب المبيعات -->
-    <div class="tab-content" id="salesTab">
-      <div class="section-card">
-        <h3 class="section-title"><i class="fas fa-chart-simple"></i> تسجيل مبيعات</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label>اسم العميل</label>
-            <input type="text" id="customerName" placeholder="أدخل اسم العميل">
-          </div>
-          <div class="form-group">
-            <label>المبلغ (جنيه)</label>
-            <input type="number" id="saleAmount" placeholder="أدخل المبلغ">
-          </div>
-        </div>
-        <button class="btn btn-primary" id="addSaleBtn"><i class="fas fa-plus"></i> تسجيل بيع</button>
-        <div id="salesMsg" style="margin-top: 15px;"></div>
-      </div>
+    <!-- نظام المبيعات -->
+    <div class="dashboard-card bg-white dark:bg-gray-800 p-6 mb-8 shadow-lg">
+      <h2 class="text-2xl font-bold mb-4"><i class="fas fa-chart-line text-green-500"></i> نظام المبيعات</h2>
+      <div class="bg-indigo-100 dark:bg-indigo-900 p-4 rounded-xl mb-4 text-center"><span id="todayTotalSales">0</span> جنيه إجمالي مبيعات اليوم</div>
+      <form id="salesForm" class="flex flex-wrap gap-3 mb-4">
+        <input type="text" id="customerName" placeholder="اسم العميل" class="flex-1 p-2 rounded-xl border dark:bg-gray-700" required>
+        <input type="number" id="saleAmount" placeholder="المبلغ" class="w-32 p-2 rounded-xl border dark:bg-gray-700" required>
+        <button type="submit" class="bg-green-600 text-white px-5 py-2 rounded-xl">تسجيل <i class="fas fa-plus"></i></button>
+        <button type="button" id="viewSalesBtn" class="bg-blue-600 text-white px-5 py-2 rounded-xl">عرض المبيعات</button>
+      </form>
+      <div id="salesList" class="hidden overflow-x-auto"></div>
+    </div>
 
-      <div class="section-card">
-        <div class="flex-between" style="display: flex; justify-content: space-between; align-items: center;">
-          <h3 class="section-title"><i class="fas fa-list"></i> قائمة المبيعات</h3>
-          <button class="btn btn-primary" id="refreshSalesBtn"><i class="fas fa-refresh"></i> تحديث</button>
-        </div>
-        <div class="table-responsive">
-          <table id="salesTable">
-            <thead><tr><th>العميل</th><th>المبلغ</th><th>التاريخ</th><th>إجراءات</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
+    <!-- المستخدمين والرسائل -->
+    <div class="grid md:grid-cols-2 gap-8 mb-8">
+      <div class="dashboard-card bg-white dark:bg-gray-800 p-6 shadow-lg">
+        <h2 class="text-xl font-bold mb-3"><i class="fas fa-users"></i> المستخدمون</h2>
+        <div id="usersContainer" class="overflow-x-auto text-sm"></div>
+      </div>
+      <div class="dashboard-card bg-white dark:bg-gray-800 p-6 shadow-lg">
+        <h2 class="text-xl font-bold mb-3"><i class="fas fa-calendar-alt"></i> الحجوزات</h2>
+        <div id="bookingsContainer" class="overflow-x-auto text-sm"></div>
       </div>
     </div>
 
-    <!-- تبويب المستخدمين -->
-    <div class="tab-content" id="usersTab">
-      <div class="section-card">
-        <h3 class="section-title"><i class="fas fa-users"></i> قائمة المستخدمين</h3>
-        <div class="table-responsive">
-          <table id="usersTable">
-            <thead><tr><th>الاسم</th><th>البريد</th><th>الهاتف</th><th>تاريخ التسجيل</th><th>الرسائل</th><th>إجراءات</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
+    <!-- النتائج -->
+    <div class="dashboard-card bg-white dark:bg-gray-800 p-6 mb-8 shadow-lg">
+      <h2 class="text-2xl font-bold mb-4"><i class="fas fa-file-alt"></i> رفع نتائج جديدة</h2>
+      <form id="uploadResultForm" class="flex flex-wrap gap-4 items-end mb-6">
+        <div class="flex-1"><label>رقم الهاتف</label><input type="tel" id="resultPhone" class="w-full p-2 rounded-xl border dark:bg-gray-700" required></div>
+        <div class="flex-1"><label>ملف النتيجة</label><input type="file" id="resultFile" class="w-full p-2 border rounded-xl dark:bg-gray-700" required></div>
+        <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-xl"><i class="fas fa-upload"></i> رفع</button>
+      </form>
+      <div id="resultsContainer" class="overflow-x-auto"></div>
     </div>
 
-    <!-- تبويب الحجوزات -->
-    <div class="tab-content" id="bookingsTab">
-      <div class="section-card">
-        <h3 class="section-title"><i class="fas fa-calendar-check"></i> قائمة الحجوزات</h3>
-        <div class="table-responsive">
-          <table id="bookingsTable">
-            <thead><tr><th>الاسم</th><th>الهاتف</th><th>التاريخ</th><th>الوقت</th><th>تاريخ الحجز</th><th>إجراءات</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
+    <!-- إرسال رسائل -->
+    <div class="dashboard-card bg-white dark:bg-gray-800 p-6 shadow-lg">
+      <h2 class="text-2xl font-bold mb-4"><i class="fas fa-paper-plane"></i> إرسال إشعار للمستخدم</h2>
+      <form id="adminMessageForm" class="flex flex-wrap gap-4 mb-6">
+        <input type="email" id="targetEmail" placeholder="البريد الإلكتروني" class="flex-1 p-2 rounded-xl border dark:bg-gray-700" required>
+        <textarea id="messageText" placeholder="محتوى الرسالة" rows="2" class="flex-1 p-2 rounded-xl border dark:bg-gray-700" required></textarea>
+        <button type="submit" class="bg-purple-600 text-white px-6 py-2 rounded-xl">إرسال <i class="fas fa-envelope"></i></button>
+      </form>
+      <div id="sentMessagesContainer"></div>
     </div>
-
-    <!-- تبويب النتائج -->
-    <div class="tab-content" id="resultsTab">
-      <div class="section-card">
-        <h3 class="section-title"><i class="fas fa-upload"></i> رفع نتيجة جديدة</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label>رقم الهاتف</label>
-            <input type="tel" id="resultPhone" placeholder="أدخل رقم الهاتف">
-          </div>
-          <div class="form-group">
-            <label>ملف النتيجة</label>
-            <input type="file" id="resultFile" accept=".pdf,.jpg,.png">
-          </div>
-        </div>
-        <button class="btn btn-primary" id="uploadResultBtn"><i class="fas fa-upload"></i> رفع النتيجة</button>
-        <div id="uploadMsg" style="margin-top: 15px;"></div>
-      </div>
-
-      <div class="section-card">
-        <h3 class="section-title"><i class="fas fa-file-alt"></i> النتائج المرفوعة</h3>
-        <div class="table-responsive">
-          <table id="resultsTable">
-            <thead><tr><th>رقم الهاتف</th><th>الملف</th><th>تاريخ الرفع</th><th>إجراءات</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- تبويب الرسائل -->
-    <div class="tab-content" id="messagesTab">
-      <div class="section-card">
-        <h3 class="section-title"><i class="fas fa-paper-plane"></i> إرسال رسالة</h3>
-        <div class="form-group">
-          <label>البريد الإلكتروني</label>
-          <input type="email" id="msgEmail" placeholder="أدخل البريد الإلكتروني">
-        </div>
-        <div class="form-group">
-          <label>نص الرسالة</label>
-          <textarea id="msgText" rows="4" placeholder="اكتب رسالتك هنا..."></textarea>
-        </div>
-        <button class="btn btn-primary" id="sendMsgBtn"><i class="fas fa-paper-plane"></i> إرسال</button>
-        <div id="sendMsg" style="margin-top: 15px;"></div>
-      </div>
-
-      <div class="section-card">
-        <h3 class="section-title"><i class="fas fa-history"></i> الرسائل المرسلة</h3>
-        <div class="table-responsive">
-          <table id="sentMessagesTable">
-            <thead><tr><th>البريد</th><th>الرسالة</th><th>تاريخ الإرسال</th><th>إجراءات</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </main>
+  </div>
 
   <script>
-    // ========== التحقق من التوكن ==========
     const token = localStorage.getItem('token');
-    if (!token) {
-      window.location.href = '/admin-login.html';
-    }
+    if (!token) window.location.href = '/admin-login.html';
 
-    // ========== الوضع الداكن ==========
-    const themeToggle = document.getElementById('themeToggle');
-    if (localStorage.getItem('darkMode') === 'true') {
-      document.body.classList.add('dark-mode');
-      themeToggle.innerHTML = '☀️';
-    }
-    themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      const isDark = document.body.classList.contains('dark-mode');
-      themeToggle.innerHTML = isDark ? '☀️' : '🌙';
-      localStorage.setItem('darkMode', isDark);
+    // Dark mode
+    if (localStorage.getItem('dashboardDark') === 'true') document.body.classList.add('dark');
+    document.getElementById('darkModeDashboard').addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('dashboardDark', document.body.classList.contains('dark'));
     });
 
-    // ========== التبويبات والشريط الجانبي ==========
-    const tabs = document.querySelectorAll('[data-tab]');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    tabs.forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        e.preventDefault();
-        const tabId = tab.dataset.tab + 'Tab';
-        
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        
-        tabContents.forEach(content => content.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        
-        if (window.innerWidth <= 768) {
-          document.getElementById('sidebar').classList.remove('open');
-        }
-      });
-    });
-
-    // القائمة للجوال
-    const menuToggleSidebar = document.getElementById('menuToggleSidebar');
-    const sidebar = document.getElementById('sidebar');
-    menuToggleSidebar.addEventListener('click', () => {
-      sidebar.classList.toggle('open');
-    });
-
-    // ========== دوال المساعدة ==========
-    async function fetchApi(url, options = {}) {
-      const res = await fetch(url, {
-        ...options,
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          ...options.headers
-        }
-      });
-      if (res.status === 401 || res.status === 403) {
-        localStorage.removeItem('token');
-        window.location.href = '/admin-login.html';
-      }
+    async function fetchWithAuth(url, options = {}) {
+      const res = await fetch(url, { ...options, headers: { ...options.headers, 'Authorization': `Bearer ${token}` } });
+      if (res.status === 401) { localStorage.removeItem('token'); window.location.href = '/admin-login.html'; }
       return res;
     }
 
-    function showMessage(element, message, isError = false) {
-      element.innerHTML = `<div style="background: ${isError ? '#ef4444' : '#22c55e'}; color: white; padding: 12px; border-radius: 12px;">${isError ? '❌' : '✅'} ${message}</div>`;
-      setTimeout(() => element.innerHTML = '', 3000);
-    }
-
-    // ========== إحصائيات الرئيسية ==========
-    async function loadStats() {
-      try {
-        const usersRes = await fetchApi('/api/admin/users');
-        const users = await usersRes.json();
-        document.getElementById('totalUsers').textContent = users.length;
-        
-        const bookingsRes = await fetchApi('/api/admin/bookings');
-        const bookings = await bookingsRes.json();
-        document.getElementById('totalBookings').textContent = bookings.length;
-        
-        const resultsRes = await fetchApi('/api/admin/results');
-        const results = await resultsRes.json();
-        document.getElementById('totalResults').textContent = results.length;
-        
-        const salesRes = await fetchApi('/api/admin/sales/today');
-        const salesData = await salesRes.json();
-        document.getElementById('todaySales').textContent = salesData.todayTotal || 0;
-        
-        // آخر 5 مبيعات
-        const allSalesRes = await fetchApi('/api/admin/sales/today');
-        const allSales = await allSalesRes.json();
-        const recentTbody = document.querySelector('#recentSalesTable tbody');
-        recentTbody.innerHTML = (allSales.sales || []).slice(0, 5).map(s => `
-          <tr><td>${s.customerName}</td><td>${s.amount} ج</td><td>${new Date(s.saleTime).toLocaleString('ar-EG')}</td></tr>
-        `).join('');
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    // ========== المبيعات ==========
-    async function loadSales() {
-      const res = await fetchApi('/api/admin/sales/today');
-      const data = await res.json();
-      const tbody = document.querySelector('#salesTable tbody');
-      tbody.innerHTML = (data.sales || []).map(s => `
-        <tr>
-          <td>${s.customerName}</td>
-          <td>${s.amount} ج</td>
-          <td>${new Date(s.saleTime).toLocaleString('ar-EG')}</td>
-          <td><button class="btn btn-danger btn-sm" onclick="deleteSale('${s.id}')"><i class="fas fa-trash"></i></button></td>
-        </tr>
-      `).join('');
-    }
-    
-    window.deleteSale = async (id) => {
-      if (!confirm('هل أنت متأكد من حذف هذه العملية؟')) return;
-      await fetchApi(`/api/admin/sale/${id}`, { method: 'DELETE' });
-      loadSales();
-      loadStats();
-      showMessage(document.getElementById('salesMsg'), 'تم الحذف بنجاح');
-    };
-    
-    document.getElementById('addSaleBtn').addEventListener('click', async () => {
-      const customerName = document.getElementById('customerName').value.trim();
-      const amount = document.getElementById('saleAmount').value.trim();
-      if (!customerName || !amount) {
-        showMessage(document.getElementById('salesMsg'), 'يرجى ملء جميع الحقول', true);
-        return;
-      }
-      const res = await fetchApi('/api/admin/sales', {
-        method: 'POST',
-        body: JSON.stringify({ customerName, amount: parseFloat(amount) })
-      });
-      if (res.ok) {
-        showMessage(document.getElementById('salesMsg'), 'تم تسجيل البيع بنجاح');
-        document.getElementById('customerName').value = '';
-        document.getElementById('saleAmount').value = '';
-        loadSales();
-        loadStats();
-      } else {
-        showMessage(document.getElementById('salesMsg'), 'حدث خطأ', true);
-      }
-    });
-    
-    document.getElementById('refreshSalesBtn').addEventListener('click', loadSales);
-
-    // ========== المستخدمين ==========
+    // تحميل البيانات
     async function loadUsers() {
-      const res = await fetchApi('/api/admin/users');
+      const res = await fetchWithAuth('/api/admin/users');
       const users = await res.json();
-      const tbody = document.querySelector('#usersTable tbody');
-      tbody.innerHTML = users.map(u => `
-        <tr>
-          <td>${u.name}</td>
-          <td>${u.email}</td>
-          <td>${u.phone}</td>
-          <td>${new Date(u.receivedAt).toLocaleString('ar-EG')}</td>
-          <td style="max-width:200px; word-wrap:break-word;">${u.messages}</td>
-          <td><button class="btn btn-danger btn-sm" onclick="deleteUser('${u.email}')"><i class="fas fa-trash"></i></button></td>
-        </tr>
-      `).join('');
+      document.getElementById('usersContainer').innerHTML = `
+        <table class="w-full text-sm"><thead><tr><th>الاسم</th><th>البريد</th><th>الهاتف</th><th>الرسائل</th><th></th></tr></thead><tbody>
+        ${users.map(u => `<tr><td>${u.name}</td><td>${u.email}</td><td>${u.phone}</td><td class="max-w-xs truncate">${u.messages.substring(0,50)}</td><td><button onclick="deleteUser('${u.email}')" class="bg-red-500 text-white px-2 py-1 rounded text-xs">حذف</button></td></tr>`).join('')}
+        </tbody></table>`;
     }
-    
-    window.deleteUser = async (email) => {
-      if (!confirm('هل أنت متأكد من حذف هذا المستخدم؟')) return;
-      await fetchApi(`/api/admin/user/${encodeURIComponent(email)}`, { method: 'DELETE' });
-      loadUsers();
-      loadStats();
-    };
-
-    // ========== الحجوزات ==========
     async function loadBookings() {
-      const res = await fetchApi('/api/admin/bookings');
+      const res = await fetchWithAuth('/api/admin/bookings');
       const bookings = await res.json();
-      const tbody = document.querySelector('#bookingsTable tbody');
-      tbody.innerHTML = bookings.map(b => `
-        <tr>
-          <td>${b.name}</td>
-          <td>${b.phone}</td>
-          <td>${b.date}</td>
-          <td>${b.time}</td>
-          <td>${new Date(b.receivedAt).toLocaleString('ar-EG')}</td>
-          <td><button class="btn btn-danger btn-sm" onclick="deleteBooking('${b.phone}')"><i class="fas fa-trash"></i></button></td>
-        </tr>
-      `).join('');
+      document.getElementById('bookingsContainer').innerHTML = `<table class="w-full text-sm"><thead><tr><th>الاسم</th><th>الهاتف</th><th>التاريخ</th><th>الوقت</th><th></th></tr></thead><tbody>${bookings.map(b => `<tr><td>${b.name}</td><td>${b.phone}</td><td>${b.date}</td><td>${b.time}</td><td><button onclick="deleteBooking('${b.phone}')" class="bg-red-500 text-white px-2 py-1 rounded">حذف</button></td></tr>`).join('')}</tbody></table>`;
     }
-    
-    window.deleteBooking = async (phone) => {
-      if (!confirm('هل أنت متأكد من حذف هذا الحجز؟')) return;
-      await fetchApi(`/api/admin/booking/${encodeURIComponent(phone)}`, { method: 'DELETE' });
-      loadBookings();
-      loadStats();
-    };
-
-    // ========== النتائج ==========
     async function loadResults() {
-      const res = await fetchApi('/api/admin/results');
+      const res = await fetchWithAuth('/api/admin/results');
       const results = await res.json();
-      const tbody = document.querySelector('#resultsTable tbody');
-      tbody.innerHTML = results.map(r => `
-        <tr>
-          <td>${r.phone}</td>
-          <td><a href="${r.fileUrl}" target="_blank" class="btn btn-primary btn-sm">عرض الملف</a></td>
-          <td>${new Date(r.uploadedAt).toLocaleString('ar-EG')}</td>
-          <td><button class="btn btn-danger btn-sm" onclick="deleteResult('${r.phone}')"><i class="fas fa-trash"></i></button></td>
-        </tr>
-      `).join('');
+      document.getElementById('resultsContainer').innerHTML = `<table class="w-full"><thead><tr><th>رقم الهاتف</th><th>الملف</th><th>التاريخ</th><th></th></tr></thead><tbody>${results.map(r => `<tr><td>${r.phone}</td><td><a href="${r.fileUrl}" target="_blank" class="text-indigo-600">عرض</a></td><td>${new Date(r.uploadedAt).toLocaleDateString()}</td><td><button onclick="deleteResult('${r.phone}')" class="bg-red-500 px-2 py-1 rounded text-white">حذف</button></td></tr>`).join('')}</tbody></table>`;
     }
-    
-    window.deleteResult = async (phone) => {
-      if (!confirm('هل أنت متأكد من حذف هذه النتيجة؟')) return;
-      await fetchApi(`/api/admin/result/${encodeURIComponent(phone)}`, { method: 'DELETE' });
-      loadResults();
-      loadStats();
-    };
-    
-    document.getElementById('uploadResultBtn').addEventListener('click', async () => {
-      const phone = document.getElementById('resultPhone').value.trim();
-      const file = document.getElementById('resultFile').files[0];
-      if (!phone || !file) {
-        showMessage(document.getElementById('uploadMsg'), 'يرجى إدخال رقم الهاتف واختيار ملف', true);
-        return;
-      }
-      const formData = new FormData();
-      formData.append('phone', phone);
-      formData.append('resultFile', file);
-      const res = await fetch('/api/upload-result', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` },
-        body: formData
-      });
-      if (res.ok) {
-        showMessage(document.getElementById('uploadMsg'), 'تم رفع النتيجة بنجاح');
-        document.getElementById('resultPhone').value = '';
-        document.getElementById('resultFile').value = '';
-        loadResults();
-        loadStats();
-      } else {
-        showMessage(document.getElementById('uploadMsg'), 'حدث خطأ في الرفع', true);
-      }
-    });
-
-    // ========== الرسائل ==========
-    async function loadMessages() {
-      const res = await fetchApi('/api/admin/messages');
-      const messages = await res.json();
-      const tbody = document.querySelector('#sentMessagesTable tbody');
-      tbody.innerHTML = messages.map((m, idx) => `
-        <tr>
-          <td>${m.email}</td>
-          <td style="max-width:250px; word-wrap:break-word;">${m.message}</td>
-          <td>${new Date(m.sentAt).toLocaleString('ar-EG')}</td>
-          <td><button class="btn btn-danger btn-sm" onclick="deleteMessage('${m.id}')"><i class="fas fa-trash"></i></button></td>
-        </tr>
-      `).join('');
+    async function loadSales() {
+      const res = await fetchWithAuth('/api/admin/sales/today');
+      const data = await res.json();
+      document.getElementById('todayTotalSales').innerHTML = data.todayTotal;
+      document.getElementById('salesList').innerHTML = `<table class="w-full mt-4"><thead><tr><th>العميل</th><th>المبلغ</th><th>الوقت</th><th></th></tr></thead><tbody>${data.sales.map(s => `<tr><td>${s.customerName}</td><td>${s.amount} ج</td><td>${new Date(s.saleTime).toLocaleTimeString()}</td><td><button onclick="deleteSale('${s.id}')" class="bg-red-500 px-2 py-1 rounded text-white">حذف</button></td></tr>`).join('')}</tbody></table>`;
     }
-    
-    window.deleteMessage = async (id) => {
-      if (!confirm('هل أنت متأكد من حذف هذه الرسالة؟')) return;
-      await fetchApi(`/api/admin/message/${id}`, { method: 'DELETE' });
-      loadMessages();
-    };
-    
-    document.getElementById('sendMsgBtn').addEventListener('click', async () => {
-      const email = document.getElementById('msgEmail').value.trim();
-      const message = document.getElementById('msgText').value.trim();
-      if (!email || !message) {
-        showMessage(document.getElementById('sendMsg'), 'يرجى ملء جميع الحقول', true);
-        return;
-      }
-      const res = await fetchApi('/api/admin/message', {
-        method: 'POST',
-        body: JSON.stringify({ email, message })
-      });
-      if (res.ok) {
-        showMessage(document.getElementById('sendMsg'), 'تم إرسال الرسالة بنجاح');
-        document.getElementById('msgEmail').value = '';
-        document.getElementById('msgText').value = '';
-        loadMessages();
-      } else {
-        showMessage(document.getElementById('sendMsg'), 'حدث خطأ في الإرسال', true);
-      }
-    });
 
-    // ========== تسجيل الخروج ==========
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
-      if (!confirm('هل أنت متأكد من تسجيل الخروج؟')) return;
-      await fetchApi('/api/admin/logout', { method: 'POST' });
-      localStorage.removeItem('token');
-      window.location.href = '/admin-login.html';
-    });
+    window.deleteUser = async (email) => { if(confirm('حذف المستخدم؟')){ await fetchWithAuth(`/api/admin/user/${encodeURIComponent(email)}`, {method:'DELETE'}); loadUsers(); }};
+    window.deleteBooking = async (phone) => { if(confirm('حذف الحجز؟')){ await fetchWithAuth(`/api/admin/booking/${encodeURIComponent(phone)}`, {method:'DELETE'}); loadBookings(); }};
+    window.deleteResult = async (phone) => { if(confirm('حذف النتيجة؟')){ await fetchWithAuth(`/api/admin/result/${encodeURIComponent(phone)}`, {method:'DELETE'}); loadResults(); }};
+    window.deleteSale = async (id) => { if(confirm('حذف البيع؟')){ await fetchWithAuth(`/api/admin/sale/${id}`, {method:'DELETE'}); loadSales(); }};
 
-    // ========== تحميل البيانات ==========
-    loadStats();
-    loadSales();
-    loadUsers();
-    loadBookings();
-    loadResults();
-    loadMessages();
+    document.getElementById('salesForm').addEventListener('submit', async(e) => {
+      e.preventDefault();
+      const customerName = document.getElementById('customerName').value;
+      const amount = document.getElementById('saleAmount').value;
+      await fetchWithAuth('/api/admin/sales', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({customerName, amount}) });
+      loadSales(); e.target.reset();
+    });
+    document.getElementById('uploadResultForm').addEventListener('submit', async(e) => {
+      e.preventDefault();
+      const fd = new FormData();
+      fd.append('phone', document.getElementById('resultPhone').value);
+      fd.append('resultFile', document.getElementById('resultFile').files[0]);
+      await fetchWithAuth('/api/upload-result', { method:'POST', body:fd });
+      loadResults(); e.target.reset();
+    });
+    document.getElementById('adminMessageForm').addEventListener('submit', async(e) => {
+      e.preventDefault();
+      const email = document.getElementById('targetEmail').value;
+      const message = document.getElementById('messageText').value;
+      await fetchWithAuth('/api/admin/message', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email, message}) });
+      alert('تم الإرسال'); e.target.reset();
+    });
+    document.getElementById('viewSalesBtn').addEventListener('click', () => document.getElementById('salesList').classList.toggle('hidden'));
+    document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.removeItem('token'); window.location.href='/admin-login.html'; });
+
+    loadUsers(); loadBookings(); loadResults(); loadSales();
   </script>
 </body>
 </html>
